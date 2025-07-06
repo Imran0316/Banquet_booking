@@ -7,7 +7,7 @@ include 'header.php';
     } */
 </style>
 
-<nav class="navbar navbar-expand-lg w-100 navbar-light  bg-transparent position-fixed z-2 position-absolute  shadow-sm">
+<nav class="navbar navbar-expand-lg w-100 navbar-light  bg-transparent transition-nav position-fixed z-2 position-absolute  shadow-sm">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">
       <i class="fa-solid fa-champagne-glasses me-2"></i>Banquet Booking
@@ -26,16 +26,19 @@ include 'header.php';
           <a class="nav-link" href="banquet_list.php">Banquets</a>
         </li>
 
-        <?php if (isset($_SESSION['user_id'])): ?>
+        <?php if (isset($_SESSION['id'])):  ?>
+          
           <li class="nav-item">
             <a class="nav-link" href="my_bookings.php">My Bookings</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php">Logout</a>
+            <a class="nav-link" href="../banquet_booking/logout.php">Logout</a>
           </li>
-        <?php else: ?>
+        <?php else:
+          ?>
+
           <li class="nav-item">
-            <a class="nav-link" href="login.php">Login</a>
+            <a class="nav-link" href="../banquet_booking/users/login.php">Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="register.php">Register</a>
@@ -45,3 +48,7 @@ include 'header.php';
     </div>
   </div>
 </nav>
+
+<?php
+// include 'footer.php';
+?>

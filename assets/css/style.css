@@ -83,3 +83,85 @@ section p {
   background-color: #C08B5C;
   border: none;
 }
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0.3rem 0.3rem 0 0;
+}
+@media (max-width: 576px) {
+  .card-img-top {
+    height: 150px;
+  }
+}
+.transition-nav {
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+}
+
+.navbar.scrolled {
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  
+}
+
+.navbar.scrolled .nav-link {
+  color: #000 !important; 
+}
+/* section 4 */
+/* how it works */
+section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.4rem;
+}
+
+section i {
+  transition: transform 0.3s ease;
+}
+
+section i:hover {
+  transform: scale(1.1);
+}
+/* testimonial */
+.testimonial.carousel-item img {
+  border: 3px solid #C08B5C;
+  padding: 3px;
+}
+
+.testimonial.carousel-item {
+  padding: 30px 20px;
+  min-height: 300px;
+}
+
+.testimonial.carousel-inner p {
+  font-size: 1.1rem;
+  font-style: italic;
+  max-width: 700px;
+  margin: 0 auto;
+}
+/* banquet owner cta */
+
+.owner-cta {
+  background: url('../images/banquet6.jpg') center center/cover no-repeat !important;
+  color: white !important;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.owner-cta .btn-warning:hover {
+  background-color: #C08B5C;
+  color: #fff;
+}
+.owner-cta h2 {
+  color: white;
+}
+
+/* foooter */
+footer a:hover {
+  color: #C08B5C !important;
+}
+
+footer i {
+  font-size: 1rem;
+}
+.foot p{
+  color: goldenrod !important;
+}

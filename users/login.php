@@ -29,7 +29,7 @@ if($user && password_verify($password, $user['password'])){
     $_SESSION['name'] = $user['name'];
     $_SESSION['email'] = $user['email'];
 
-  header("Location: dashboard.php");   
+  header("Location: ../index.php");   
   exit();
 }else{
      $_SESSION['error'] = "Email or password is incorrect";    
