@@ -1,11 +1,7 @@
 <?php
 include 'header.php';
 ?>
-<style>
-    /* .navbar .nav-link{
-        color: white !important;
-    } */
-</style>
+
 
 <nav class="navbar navbar-expand-lg w-100 navbar-light  bg-transparent transition-nav position-fixed z-2 position-absolute  shadow-sm">
   <div class="container">
@@ -24,6 +20,10 @@ include 'header.php';
         </li>
         <li class="nav-item">
           <a class="nav-link" href="banquet_list.php">Banquets</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="owner/login.php">List Banquet</a>
         </li>
 
         <?php if (isset($_SESSION['id'])):  ?>

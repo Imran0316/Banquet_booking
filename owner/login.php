@@ -5,6 +5,11 @@ include '../db.php';
 include '../includes/header.php';
 
 
+if(isset($_GET['registered']) && $_GET['registered'] == 1) {
+    echo "<div class='alert alert-success'>Registration successful! </br>
+Your account is pending approval. You will be notified once it's approved. </div>";
+    
+}
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["login"])){
 $email = $_POST["email"];
 $password = $_POST["password"];
@@ -15,22 +20,43 @@ if(empty($email) || empty($password)) {
     exit();
 }
 
-if($email == "imran@gmail.com"){
-    if($password == "ik775239"){
+// $stmt = $pdo->prepare("SELECT * FROM banquet_owner");
+// $banquet_owner =  $stmt->fetchAll();
 
-        header("Location: dashboard/");
-        exit();
-    }else{
-        $_SESSION['error'] = "Incorrect Password.";    
-    header("Location: login.php");
-    exit();
-    }
-}else{
-         $_SESSION['error'] = "Email not found.";    
-    header("Location: login.php");
-    exit();
+
+$stmt = $pdo->prepare("SELECT * FROM banquet_owner WHERE email = ? ");
+$stmt->execute([$email]);
+$owner_status = $stmt->fetch();
+
+
+
+if($owner_status['status'] == "approved"){
+if(password_verify($password,$owner_status['password'])){
+    $_SESSION['owner_id'] = $owner_status['id'];
+    $_SESSION['owner_name'] = $owner_status['name'];
+    $_SESSION['owner_email'] = $owner_status['email'];
+
+  header("Location: ../index.php");   
+  exit();
 }
+}else{
+     $_SESSION['error'] = "Not approved yet!";    
+     header("Location: login.php");
+     exit();
+}
+// if($owner_status == "pending" && password_verify($password, $banquet_owner['password'])){
 
+//     $_SESSION['id'] = $user['id'];
+//     $_SESSION['name'] = $user['name'];
+//     $_SESSION['email'] = $user['email'];
+
+//   header("Location: ../index.php");   
+//   exit();
+// }else{
+//      $_SESSION['error'] = "Email or password is incorrect";    
+//      header("Location: login.php");
+//      exit();
+// }
 }
 ?>
 
