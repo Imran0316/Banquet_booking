@@ -55,7 +55,7 @@ include("include/navbar.php");
                             <td><?php echo $row["location"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
-                            <td> <a href="edit_banquet.php?id=<?php echo $row["id"] ?>" ><i class="fa-regular fa-pen-to-square me-3"></i></a> 
+                            <td> <a href="edit_banquet.php?id=<?php echo $row["id"];?>" ><i class="fa-regular fa-pen-to-square me-3"></i></a> 
                              <a href="edit_banquet.php" ><i class="fa-solid fa-trash-can"></i></a> </td>
                         </tr>
                         <?php }?>

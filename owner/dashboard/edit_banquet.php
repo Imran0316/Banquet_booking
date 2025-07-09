@@ -33,7 +33,7 @@ include("include/navbar.php");
                 unset($_SESSION['success']);
             }
             ?>
-            <form action="" method="POST" enctype="multipart/form-data">
+            <form action="banquet_update.php?id=<?php echo $banquet_id; ?>" method="POST" enctype="multipart/form-data">
                 <div class="row mb-3">
                         <input type="hidden" class="form-control form-control-sm"  value="<?php echo $owner_id ?>" name="owner_id" >
 
