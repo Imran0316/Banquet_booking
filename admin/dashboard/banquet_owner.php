@@ -6,10 +6,7 @@ include("include/header.php");
 
 include("include/sidebar.php");
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-// $stmt = $pdo->query("UPDATE banquet_owner SET status = 'Approved' WHERE id = 2");
 
-}
 
 $stmt=$pdo->query("SELECT * FROM banquet_owner");
 $sr = 1;
@@ -20,7 +17,7 @@ $sr = 1;
     include("include/navbar.php");
     ?>
 
-    <!-- Recent Sales Start -->
+    <!-- Banquet owner details -->
     <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -53,8 +50,18 @@ $sr = 1;
                             <td><?php echo $row["phone"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
-                            <form action="" method="post">
-                            <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="approved"></td>
+                            <form action="owner_status.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo $row["id"]; ?>">
+                                <input type="hidden" name="current_status" value="<?php echo $row["status"]; ?>">
+                                <?php 
+                            if($row["status"] == "rejected"){
+                            ?>
+                                <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="approved"></td>
+                            <?php }else if($row["status"] == "pending"){ ?>  
+                                   <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="pending"></td>
+                            <?php } else{?>
+                            <td><input type="submit" class="btn btn-sm btn-danger"  name="status_action" value="rejected"></td>
+                             <?php }?>   
                             </form>
                             <?php }?>
                         </tr>
@@ -64,7 +71,7 @@ $sr = 1;
             </div>
         </div>
     </div>
-    <!-- Recent Sales End -->
+    <!-- Banquet owner details -->
 
 
 

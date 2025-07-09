@@ -20,9 +20,6 @@ if(empty($email) || empty($password)) {
     exit();
 }
 
-// $stmt = $pdo->prepare("SELECT * FROM banquet_owner");
-// $banquet_owner =  $stmt->fetchAll();
-
 
 $stmt = $pdo->prepare("SELECT * FROM banquet_owner WHERE email = ? ");
 $stmt->execute([$email]);
@@ -36,10 +33,15 @@ if(password_verify($password,$owner_status['password'])){
     $_SESSION['owner_name'] = $owner_status['name'];
     $_SESSION['owner_email'] = $owner_status['email'];
 
-  header("Location: ../index.php");   
+  header("Location: dashboard/");   
   exit();
 }
-}else{
+}else if($owner_status['status'] == "rejected"){
+     $_SESSION['error'] = "your registration is rejected! </br> Kindly email on adminBanquet@gmail.com";    
+     header("Location: login.php");
+     exit();
+}
+else{
      $_SESSION['error'] = "Not approved yet!";    
      header("Location: login.php");
      exit();
