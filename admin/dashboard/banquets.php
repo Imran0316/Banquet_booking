@@ -4,29 +4,27 @@ include("../../db.php");
 include("include/header.php");
 // include("include/spinner.php");
 include("include/sidebar.php");
-$owner_id =$_GET["id"];
-$stmt=$pdo->prepare("SELECT banquets.*,
+
+$stmt=$pdo->query("SELECT banquets.*,
 banquet_owner.name AS owner_name
 FROM banquets
 JOIN banquet_owner ON banquets.owner_id = banquet_owner.id
-WHERE banquets.owner_id = ?
 ");
-$stmt->execute([$owner_id]);
+
 $sr = 1;
 ?>
 
-
 <!-- Content Start -->
 <div class="content">
-
-
     <?php
 include("include/navbar.php");
 ?>
+
+
   <div class="container-fluid pt-4 px-4">
         <div class="bg-light text-center rounded p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
-                <h6 class="mb-0">Manage Banquets</h6>
+                <h6 class="mb-0">Banquets</h6>
                 <a href="">Show All</a>
             </div>
              <?php
@@ -66,8 +64,7 @@ include("include/navbar.php");
                             <td><?php echo $row["location"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
-                            <td> <a href="edit_banquet.php?id=<?php echo $row["id"];?>" ><i class="fa-regular fa-pen-to-square me-3"></i></a> 
-                             <a href="delete_banquet.php?id=<?php echo $row["id"]; ?>" ><i class="fa-solid fa-trash-can"></i></a> </td>
+                            <td> <a href="banquet_details.php?id=<?php echo $row["id"]; ?>" class="btn btn-outline-primary">Details</a> </td>
                         </tr>
                         <?php }?>
                       
@@ -80,4 +77,5 @@ include("include/navbar.php");
 
 <?php
 include("include/footer.php");
+
 ?>

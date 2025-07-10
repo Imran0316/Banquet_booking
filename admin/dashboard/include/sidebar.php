@@ -18,6 +18,8 @@
                     <a href="index.php" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
 
                      <a href="banquet_owner.php" class="nav-item nav-link "><i class="bi bi-person-lines-fill me-2"></i>Banquet Owners</a>
+                     
+                     <a href="banquets.php" class="nav-item nav-link "><i class="bi bi-person-lines-fill me-2"></i>Banquets</a>
 
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Elements</a>
