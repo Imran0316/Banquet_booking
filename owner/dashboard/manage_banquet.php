@@ -50,6 +50,7 @@ include("include/navbar.php");
                             <th scope="col">Owner Name</th>
                             <th scope="col">Location</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Remarks</th>
                             <th scope="col">Registration Date</th>
                             <th scope="col">Action</th>
                         </tr>
@@ -65,6 +66,7 @@ include("include/navbar.php");
                             <td><?php echo $row["owner_name"]; ?></td>
                             <td><?php echo $row["location"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
+                            <td><?php echo $row["Remarks"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
                             <td> <a href="edit_banquet.php?id=<?php echo $row["id"];?>" ><i class="fa-regular fa-pen-to-square me-3"></i></a> 
                              <a href="delete_banquet.php?id=<?php echo $row["id"]; ?>" ><i class="fa-solid fa-trash-can"></i></a> </td>

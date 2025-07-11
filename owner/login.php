@@ -26,6 +26,7 @@ $stmt->execute([$email]);
 $owner_status = $stmt->fetch();
 
 
+if($stmt->rowCount() > 0){
 
 if($owner_status['status'] == "approved"){
 if(password_verify($password,$owner_status['password'])){
@@ -40,26 +41,18 @@ if(password_verify($password,$owner_status['password'])){
      $_SESSION['error'] = "your registration is rejected! </br> Kindly email on adminBanquet@gmail.com";    
      header("Location: login.php");
      exit();
-}
-else{
+ }else{
      $_SESSION['error'] = "Not approved yet!";    
      header("Location: login.php");
      exit();
 }
-// if($owner_status == "pending" && password_verify($password, $banquet_owner['password'])){
-
-//     $_SESSION['id'] = $user['id'];
-//     $_SESSION['name'] = $user['name'];
-//     $_SESSION['email'] = $user['email'];
-
-//   header("Location: ../index.php");   
-//   exit();
-// }else{
-//      $_SESSION['error'] = "Email or password is incorrect";    
-//      header("Location: login.php");
-//      exit();
-// }
+}else{
+     $_SESSION['error'] = "Email not found!";    
+     header("Location: login.php");
+     exit();
 }
+}
+
 ?>
 
 <div class="container-fluid">

@@ -39,10 +39,10 @@ $sr = 1;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
                             <?php
                             while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                             ?>
+                        <tr>
                             <td><input class="form-check-input" type="checkbox"></td>
                             <td><?php echo $sr++; ?></td>
                             <td><?php echo $row["name"]; ?></td>
@@ -50,6 +50,7 @@ $sr = 1;
                             <td><?php echo $row["phone"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
+                            <td><a href="delete_owner.php?id=<?php echo $row["id"]; ?>" ><i class="fa-solid fa-trash-can ms-3"></i></a></td>
                             <form action="owner_status.php" method="post">
                                 <input type="hidden" name="id" value="<?php echo $row["id"]; ?>">
                                 <input type="hidden" name="current_status" value="<?php echo $row["status"]; ?>">
@@ -57,14 +58,16 @@ $sr = 1;
                             if($row["status"] == "rejected"){
                             ?>
                                 <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="approved"></td>
+
                             <?php }else if($row["status"] == "pending"){ ?>  
-                                   <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="pending"></td>
+                                   <td><input type="submit" class="btn btn-sm btn-primary"  name="status_action" value="approved"></td>
                             <?php } else{?>
                             <td><input type="submit" class="btn btn-sm btn-danger"  name="status_action" value="rejected"></td>
                              <?php }?>   
                             </form>
-                            <?php }?>
+                            
                         </tr>
+                        <?php }?>
                       
                     </tbody>
                 </table>

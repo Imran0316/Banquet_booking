@@ -19,7 +19,7 @@ include 'header.php';
           <a class="nav-link " href="index.php">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="banquet_list.php">Banquets</a>
+          <a class="nav-link" href="users/listed_banquets.php">Banquets</a>
         </li>
 
         <li class="nav-item">

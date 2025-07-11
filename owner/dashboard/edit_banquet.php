@@ -67,7 +67,7 @@ include("include/navbar.php");
                  </div>
                 <div class="mb-3">
                     <label class="form-label small">Cover Image</label>
-                    <input type="file" name="cover_image" class="form-control" value="<?php echo $banquet_row["image"] ?>" id="cover_image">
+                    <input type="file" name="cover_image" class="form-control"  id="cover_image">
                 </div>
 
                 <div class="d-grid mt-3">

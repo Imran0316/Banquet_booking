@@ -64,7 +64,9 @@ include("include/navbar.php");
                             <td><?php echo $row["location"]; ?></td>
                             <td><?php echo $row["status"]; ?></td>
                             <td><?php echo $row["created_at"]; ?></td>
-                            <td> <a href="banquet_details.php?id=<?php echo $row["id"]; ?>" class="btn btn-outline-primary">Details</a> </td>
+                            <td> <a href="banquet_details.php?id=<?php echo $row["id"]; ?>" class="btn btn-outline-primary">Details</a>
+                            <a href="delete_banquet.php?id=<?php echo $row["id"]; ?>" ><i class="fa-solid fa-trash-can ms-3"></i></a>
+                        </td>
                         </tr>
                         <?php }?>
                       
