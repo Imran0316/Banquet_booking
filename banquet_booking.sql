@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 10, 2025 at 05:23 AM
+-- Generation Time: Jul 12, 2025 at 05:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,6 +49,7 @@ CREATE TABLE `banquets` (
   `description` text DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Remarks` varchar(250) NOT NULL DEFAULT 'waiting for approval',
   `status` enum('pending','approved','rejected','') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -56,8 +57,10 @@ CREATE TABLE `banquets` (
 -- Dumping data for table `banquets`
 --
 
-INSERT INTO `banquets` (`id`, `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`, `status`) VALUES
-(1, 2, 'Concord', 'north nazimabad karachi', 300, 90000.00, '\"A luxurious and spacious banquet hall located in the heart of the city, perfect for weddings, corporate events, birthdays, and special celebrations. Equipped with modern décor, premium catering services, ample parking, and customizable themes to make your occasion unforgettable.\"', '../../uploads/1752031637_banquet6.jpg', '2025-07-09 03:27:17', 'pending');
+INSERT INTO `banquets` (`id`, `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`, `Remarks`, `status`) VALUES
+(11, 4, 'marquee', 'north nazimabad karachi', 300, 120000.00, 'Marquee Banquet is an elegant and spacious event venue designed to host a wide range of occasions — from weddings and engagements to corporate events and birthday parties. With a seating capacity of up to 500 guests, modern lighting, air-conditioned halls, and premium décor,', '../../uploads/1752258039_arne-hellin-mhZBBx3BIwc-unsplash (1).jpg', '2025-07-11 18:20:39', 'waiting for approval', 'pending'),
+(12, 3, 'Royal Grand Banquet', 'clifton phase 6', 600, 220000.00, 'Royal Grand Banquet is an elegant and spacious event venue designed to host a wide range of occasions — from weddings and engagements to corporate events and birthday parties. With a seating capacity of up to 500 guests, modern lighting, air-conditioned halls, and premium décor, this banquet ensures a luxurious and memorable experience for you and your guests.', '../../uploads/1752258222_thomas-william-OAVqa8hQvWI-unsplash (1).jpg', '2025-07-11 18:23:42', 'waiting for approval', 'pending'),
+(13, 5, 'Concord', 'sakhi hassan north nazimabad', 400, 150000.00, 'Concord Banquet redefines elegance and hospitality for your most cherished moments. Whether it\'s a grand wedding, corporate gala, or festive celebration, our spacious hall, ambient lighting, and contemporary décor create the perfect atmosphere. With a guest capacity of up to 400, in-house catering, and professional event coordination,', '../../uploads/1752258638_soulseeker-creative-photography-nX5Xfn65R6Y-unsplash (1).jpg', '2025-07-11 18:30:38', 'waiting for approval', 'pending');
 
 -- --------------------------------------------------------
 
@@ -93,7 +96,9 @@ CREATE TABLE `banquet_owner` (
 --
 
 INSERT INTO `banquet_owner` (`id`, `name`, `email`, `phone`, `password`, `status`, `created_at`) VALUES
-(2, 'umar khan', 'umar@gmail.com', '0435464865', '$2y$10$Cs7.RfJfb2y50FAH7zQQX.fKSS8cpkj4jYZMV8zqyZ1nEdbVtOAUC', 'approved', '2025-07-07 10:18:57');
+(3, 'saif u rehman', 'saif@gmail.com', '0316323652', '$2y$10$EjwqYuBYgm2G7qVshLInn.yE78qqxtBETLyJ6kfkEDweLUCUDDp0W', 'approved', '2025-07-10 04:52:29'),
+(4, 'umar alam', 'umar@gmail.com', '03452654655', '$2y$10$ZI6rQHYxeAft0942zSufu.7habbydYoBIWA.F.FCldtAYoT1HOjTq', 'approved', '2025-07-10 05:57:41'),
+(5, 'faraz', 'faraz@gmail.com', '03490830516', '$2y$10$pqBqvbwsVxwo6VDzsXxDZ.n/3IXHHowXPGvASJy3KG5d5DXHhG/rm', 'approved', '2025-07-11 18:26:21');
 
 -- --------------------------------------------------------
 
@@ -198,7 +203,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `banquets`
 --
 ALTER TABLE `banquets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `banquet_images`
@@ -210,7 +215,7 @@ ALTER TABLE `banquet_images`
 -- AUTO_INCREMENT for table `banquet_owner`
 --
 ALTER TABLE `banquet_owner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `bookings`
