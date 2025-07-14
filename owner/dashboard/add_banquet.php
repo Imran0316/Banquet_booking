@@ -4,8 +4,11 @@ include("../../db.php");
 include("include/header.php");
 // include("include/spinner.php");
 include("include/sidebar.php");
+
 $owner_id = $_SESSION["owner_id"];
+
 if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])){
+
 $id = $_POST["owner_id"];
 $Banquet_name = $_POST["banquet_name"];
 $location = $_POST["location"];
@@ -24,6 +27,22 @@ if(in_array($imageFileType,$Allowedtype)){
   if(move_uploaded_file($_FILES["cover_image"]["tmp_name"], $targetFile)){
     $stmt=$pdo->prepare("INSERT INTO `banquets`( `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`) VALUES (?,?,?,?,?,?,?,NOW())");
     $stmt->execute([$owner_id,$Banquet_name,$location,$capacity,$price,$description,$targetFile]);
+
+    $galleryImages=$_FILES["GalleryImages"];
+    $imagesCount=count($galleryImages["name"]);
+ 
+    for($i=0; $i<$imagesCount; $i++){
+        if($galleryImages["error"][$i] === 0){
+            $galleryImageName = time() . "_" . rand(100, 900) . "_" . basename($galleryImages["name"][$i]);
+$targetDir = "../../uploads/";
+$targetDir = "../../uploads/";
+            $targetPath =  "../../uploads/";
+        }
+    }
+    $galleryFileName = 
+    $targetGallery = $targetDir . time() . "_" . $fileName;
+    $galleryFileType = strtolower(pathinfo($targetGallery, PATHINFO_EXTENSION));
+
     $_SESSION['success'] = "Banquet Added successfully";
     header("Location: add_banquet.php");
     exit();
@@ -63,7 +82,8 @@ include("include/navbar.php");
             ?>
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="row mb-3">
-                        <input type="hidden" class="form-control form-control-sm"  value="<?php echo $owner_id ?>" name="owner_id" >
+                    <input type="hidden" class="form-control form-control-sm" value="<?php echo $owner_id ?>"
+                        name="owner_id">
 
                     <div class="col-md-6">
                         <label class="form-label small">Banquet Name</label>
@@ -94,6 +114,12 @@ include("include/navbar.php");
                 <div class="mb-3">
                     <label class="form-label small">Cover Image</label>
                     <input type="file" name="cover_image" class="form-control" id="cover_image">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small">Images Gallery Max 5</label>
+                    <input type="file" name="GalleryImages[]" multiple accept="image/*" class="form-control"
+                        id="gallery_image">
                 </div>
 
                 <div class="d-grid mt-3">
