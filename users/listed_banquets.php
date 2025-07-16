@@ -2,6 +2,7 @@
 session_start();
 include("../db.php");
 include("../includes/header.php");
+$page = "inner";
 include("../includes/navbar.php");
 
 $stmt = $pdo->query("SELECT * FROM banquets");
@@ -102,7 +103,7 @@ $stmt = $pdo->query("SELECT * FROM banquets");
                         </div>
 
                         <!-- Button -->
-                        <a href="banquet_details.php?id=<?php echo $banquet_row['id']; ?>"
+                        <a href="booking_page.php?id=<?php echo $banquet_row['id']; ?>"
                             class="btn btn-sm btn-dark w-100 rounded-pill">
                             View Details
                         </a>

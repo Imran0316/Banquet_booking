@@ -2,8 +2,11 @@
 include 'header.php';
 ?>
 
-
+<?php if($page === "home"){?>
 <nav class="navbar navbar-expand-lg w-100 navbar-light  bg-transparent transition-nav position-fixed z-2 position-absolute  shadow-sm">
+<?php }else{?>
+<nav class="navbar navbar-expand-lg w-100 navbar-light transition-nav  z-2 position-absolute  shadow-sm">
+  <?php }?>
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.php">
       <i class="fa-solid fa-champagne-glasses me-2"></i>Banquet Booking

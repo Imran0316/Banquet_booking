@@ -2,8 +2,8 @@
 session_start();
 include 'db.php';
 include '../Banquet_booking/includes/header.php';
+$page ="home";
 include '../Banquet_booking/includes/navbar.php';
-
 ?>
 
 <!-- Hero Carousel -->
