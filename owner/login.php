@@ -55,7 +55,7 @@ if(password_verify($password,$owner_status['password'])){
 
 ?>
 
-<div class="container-fluid">
+<div class="login login_owner container-fluid">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h2 class="text-center">Login</h2>

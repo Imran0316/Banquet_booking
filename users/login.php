@@ -39,7 +39,7 @@ if($user && password_verify($password, $user['password'])){
 }
 ?>
 
-<div class="container-fluid">
+<div class="login login_user container-fluid">
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h2 class="text-center">Login</h2>
