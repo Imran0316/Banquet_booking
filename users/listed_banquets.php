@@ -11,29 +11,62 @@ $stmt = $pdo->query("SELECT * FROM banquets");
 
 ?>
 <style>
-.navbar {
-    background-color: rgba(255, 255, 255, 0.5) !important;
-
+*{
+  padding: 0%;
+  margin: 0%;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+.navbar{
+    background-color: black !important;
+}
+.navbar-brand {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.4rem;
+  color: goldenrod ;
+  
 }
 
+
+.nav-link {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #fff !important;
+}
+
+.navbar .navbar-nav .nav-item .nav-link:hover {
+  color: #C08B5C !important;
+}
 .hero-section {
     height: 450px;
     background: url('../assets/images/banquet7.jpg') center/cover no-repeat;
-    position: relative;
+    position: relative !important ;
     color: white;
 }
 
 .hero-overlay {
     background-color: rgba(104, 0, 0, 0.5);
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     flex-direction: column;
 }
-
+.hero-section h1{
+    font-family: 'Libre Baskerville', serif;
+ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.507);
+  line-height: 1.2;
+}
+.hero-section .btn{
+  color: maroon;
+  background-color: goldenrod;
+  font-size: 1.1rem;
+}
 .card-title {
     font-size: 1.2rem;
 }
@@ -61,17 +94,17 @@ $stmt = $pdo->query("SELECT * FROM banquets");
 
 </style>
 
-<section class="hero-section">
+ <section class="hero-section hero-sec-2">
     <div class="hero-overlay">
         <h1 class="display-5 fw-bold">Find the Perfect Banquet</h1>
         <p class="lead">Choose from the best venues for weddings, parties & events</p>
         <a href="#banquet-list" class="btn btn-light btn-sm mt-2">Browse Banquets</a>
     </div>
-</section>
+</section> 
 
 
 <!-- 🔶 Banquet Cards Section -->
-<section id="banquet-list" class="py-5 bg-light">
+<section id="banquet-list" class="py-5 bg-light sec-2">
     <div class="container">
         <div class="row g-4">
             <?php while($banquet_row = $stmt->fetch(PDO::FETCH_ASSOC)){
