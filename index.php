@@ -1,9 +1,9 @@
 <?php
 session_start();
 include 'db.php';
-include '../Banquet_booking/includes/header.php';
+include 'includes/header.php';
 $page ="home";
-include '../Banquet_booking/includes/navbar.php';
+include 'includes/navbar.php';
 ?>
 
 <!-- Hero Carousel -->
@@ -57,8 +57,8 @@ include '../Banquet_booking/includes/navbar.php';
 
 <!-- section-2 -->
  <!-- WHY CHOOSE US  -->
-<section class="sec-2 py-5 bg-light">
-  <div class="container text-center pattern-bg">
+<section class="sec-2 py-5  pattern-bg">
+  <div class="container text-center ">
     <h2 class="mb-4 fw-bold">Why Book With Us?</h2>
     <div class="row g-4 pt-5">
       
