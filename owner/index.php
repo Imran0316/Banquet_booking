@@ -27,9 +27,12 @@ $owner_status = $stmt->fetch();
 
 
 if($stmt->rowCount() > 0){
+if($owner_status['status'] == "rejected"){
+     $_SESSION['error'] = "your registration is rejected! </br> Kindly email on adminBanquet@gmail.com";    
+     header("Location: index.php");
+     exit();
 
-if($owner_status['status'] == "approved"){
-if(password_verify($password,$owner_status['password'])){
+}else if(password_verify($password,$owner_status['password'])){
     $_SESSION['owner_id'] = $owner_status['id'];
     $_SESSION['owner_name'] = $owner_status['name'];
     $_SESSION['owner_email'] = $owner_status['email'];
@@ -37,21 +40,13 @@ if(password_verify($password,$owner_status['password'])){
   header("Location: dashboard/");   
   exit();
 }
-}else if($owner_status['status'] == "rejected"){
-     $_SESSION['error'] = "your registration is rejected! </br> Kindly email on adminBanquet@gmail.com";    
-     header("Location: index.php");
-     exit();
- }else{
-     $_SESSION['error'] = "Not approved yet!";    
-     header("Location: index.php");
-     exit();
-}
 }else{
      $_SESSION['error'] = "Email not found!";    
      header("Location: index.php");
      exit();
 }
 }
+
 
 ?>
 

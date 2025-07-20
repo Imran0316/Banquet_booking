@@ -50,7 +50,7 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Cover Image -->
             <img src="../../uploads<?php echo $banquet_row['image']; ?>" alt="Cover Image" class="cover-img">
 
-            <table class="table text-start align-middle table-hover">
+            <table class="table text-start align-middle border table-hover">
                 <tr>
                     <th>Banquet Name:</th><td><?php echo $banquet_row["name"]; ?></td>
                     <th>Owner Name:</th><td><?php echo $banquet_row["owner_name"]; ?></td>
@@ -68,7 +68,7 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </table>
 
-            <table class="table text-start align-middle table-hover">
+            <table class="table text-start align-middle border table-hover">
                 <tr>
                     <th>Description:</th>
                     <td><?php echo $banquet_row["description"]; ?></td>

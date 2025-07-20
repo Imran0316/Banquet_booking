@@ -32,7 +32,7 @@ if(empty($name) || empty($email) || empty($phone) || empty($password) || empty($
         $stmt = $pdo->prepare("INSERT INTO `banquet_owner`(`name`, `email`, `phone`, `password`, `created_at`) VALUES (?,?,?,?,NOW())");
         $stmt->execute([$name,$email,$phone,$hashed_password]);
 
-        header("Location: login.php?registered=1");
+        header("Location: index.php?registered=1");
         exit();
     }
 
@@ -80,7 +80,7 @@ if(empty($name) || empty($email) || empty($phone) || empty($password) || empty($
                 </div>
                 <button type="submit" class="btn btn-primary" name="signup">Sign up</button>
             </form>
-            <p class="mt-3">Already have an account? <a href="login.php">login here</a></p>
+            <p class="mt-3">Already have an account? <a href="index.php">login here</a></p>
         </div>
     </div>
 </div>

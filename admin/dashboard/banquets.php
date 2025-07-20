@@ -42,7 +42,7 @@ include("include/navbar.php");
                 <table class="table text-start align-middle table-bordered table-hover mb-0">
                     <thead>
                         <tr class="text-dark">
-                            <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                           
                             <th scope="col">Sr.</th>
                             <th scope="col">Banquet Name</th>
                             <th scope="col">Owner Name</th>
@@ -57,7 +57,7 @@ include("include/navbar.php");
                             while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                             ?>
                         <tr>
-                            <td><input class="form-check-input" type="checkbox"></td>
+                          
                             <td><?php echo $sr++; ?></td>
                             <td><?php echo $row["name"]; ?></td>
                             <td><?php echo $row["owner_name"]; ?></td>
