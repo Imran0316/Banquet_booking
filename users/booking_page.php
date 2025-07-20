@@ -3,7 +3,7 @@ session_start();
 include("../db.php");
 include("../includes/header.php");
 $banquet_id = $_GET["id"];
-$user_id = $_SESSION['id'];
+// $user_id = $_SESSION['id'];
 $page = "inner";
 ?>
 
@@ -186,3 +186,74 @@ include("../includes/navbar.php");
 <?php 
 include("../includes/footer.php");
 ?>
+
+<script>
+$(document).ready(function() {
+    $.getJSON("get_booked_dates.php?id=<?php echo $banquet_id ?>", function(data) {
+        const fullyBooked = data.fullyBooked;
+        const partiallyBooked = data.partiallyBooked;
+
+        flatpickr("#myDatePicker", {
+            dateFormat: "Y-m-d",
+            disable: fullyBooked,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const date = dayElem.dateObj;
+                // const ymd = date.toISOString().slice(0, 10);
+                const ymd = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                if (fullyBooked.includes(ymd)) {
+                    dayElem.classList.add("fully-booked");
+                } else if (partiallyBooked.includes(ymd)) {
+                    dayElem.classList.add("partially-booked");
+                }
+            },
+            onChange: function(selectedDates, dateStr) {
+                $.getJSON("get_booked_slots.php", {
+                    date: dateStr
+                }, function(bookedSlots) {
+                    const slotMap = {
+                        "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
+                        "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
+                    };
+
+                    $("#timeSlot option").each(function() {
+                        const originalText = $(this).data("original-text");
+                        if (originalText) {
+                            $(this).text(originalText);
+                        }
+                        $(this).prop("disabled", false);
+                    });
+
+                    bookedSlots.forEach(function(slotLabel) {
+                        const slotValue = slotMap[slotLabel];
+                        const $option = $("#timeSlot option[value='" +
+                            slotValue + "']");
+                        if ($option.length) {
+                            if (!$option.data("original-text")) {
+                                $option.data("original-text", $option
+                                    .text());
+                            }
+                            $option.text($option.text() + " (Booked)");
+                            $option.prop("disabled", true);
+                        }
+                    });
+
+                    $("#timeSlot").val("");
+                });
+            }
+        });
+    });
+});
+</script>
+<style>
+.flatpickr-day.partially-booked {
+    border-bottom: 2px solid #ff9800 !important;
+    background: #fffbe6;
+}
+
+.flatpickr-day.fully-booked {
+    border-bottom: 2px solid #e53935 !important;
+    /* Red underline */
+    background: #ffeaea;
+    color: #b71c1c;
+}
+</style>

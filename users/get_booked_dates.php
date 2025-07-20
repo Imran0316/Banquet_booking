@@ -1,7 +1,7 @@
 <?php
 include("../db.php");
-
-$stmt = $pdo->query("SELECT date, time_slot FROM bookings");
+$banquet_id = $_GET["id"];
+$stmt = $pdo->query("SELECT date, time_slot FROM bookings WHERE banquet_id = $banquet_id");
 $slotCounts = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

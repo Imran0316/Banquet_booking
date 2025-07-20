@@ -26,7 +26,7 @@ include 'header.php';
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="owner/login.php">List Banquet</a>
+          <a class="nav-link" href="owner/">List Banquet</a>
         </li>
 
         <?php if (isset($_SESSION['id'])):  ?>

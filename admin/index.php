@@ -22,12 +22,12 @@ if($email == "imran@gmail.com"){
         exit();
     }else{
         $_SESSION['error'] = "Incorrect Password.";    
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
     }
 }else{
          $_SESSION['error'] = "Email not found.";    
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 

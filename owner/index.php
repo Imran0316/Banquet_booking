@@ -16,7 +16,7 @@ $password = $_POST["password"];
 
 if(empty($email) || empty($password)) {
     $_SESSION['error'] = "All fields are required.";    
-    header("Location: login.php");
+    header("Location: index.php");
     exit();
 }
 
@@ -39,16 +39,16 @@ if(password_verify($password,$owner_status['password'])){
 }
 }else if($owner_status['status'] == "rejected"){
      $_SESSION['error'] = "your registration is rejected! </br> Kindly email on adminBanquet@gmail.com";    
-     header("Location: login.php");
+     header("Location: index.php");
      exit();
  }else{
      $_SESSION['error'] = "Not approved yet!";    
-     header("Location: login.php");
+     header("Location: index.php");
      exit();
 }
 }else{
      $_SESSION['error'] = "Email not found!";    
-     header("Location: login.php");
+     header("Location: index.php");
      exit();
 }
 }

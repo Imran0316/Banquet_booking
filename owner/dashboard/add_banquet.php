@@ -1,60 +1,131 @@
+
 <?php 
 session_start();
 include("../../db.php");
 include("include/header.php");
-// include("include/spinner.php");
 include("include/sidebar.php");
 
 $owner_id = $_SESSION["owner_id"];
 
-if($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])){
+if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
 
-$id = $_POST["owner_id"];
-$Banquet_name = $_POST["banquet_name"];
-$location = $_POST["location"];
-$capacity = $_POST["capacity"];
-$price = $_POST["price"];
-$description = $_POST["description"];
+    $Banquet_name = $_POST["banquet_name"];
+    $location = $_POST["location"];
+    $capacity = $_POST["capacity"];
+    $price = $_POST["price"];
+    $description = $_POST["description"];
 
-$targetDir = "../../uploads/";
-$fileName = basename($_FILES["cover_image"]["name"]);
-$targetFile = $targetDir . time() . "_" . $fileName;
-$imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+    $targetDir = "../../uploads/";
+    $fileName = basename($_FILES["cover_image"]["name"]);
+    $targetFile = $targetDir . time() . "_" . $fileName;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-$Allowedtype = ['jpg','jpeg','gif','png'];
+    $Allowedtype = ['jpg', 'jpeg', 'gif', 'png'];
 
-if(in_array($imageFileType,$Allowedtype)){
-  if(move_uploaded_file($_FILES["cover_image"]["tmp_name"], $targetFile)){
-    $stmt=$pdo->prepare("INSERT INTO `banquets`( `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`) VALUES (?,?,?,?,?,?,?,NOW())");
-    $stmt->execute([$owner_id,$Banquet_name,$location,$capacity,$price,$description,$targetFile]);
+    if (in_array($imageFileType, $Allowedtype)) {
+        if (move_uploaded_file($_FILES["cover_image"]["tmp_name"], $targetFile)) {
 
-    $galleryImages=$_FILES["GalleryImages"];
-    $imagesCount=count($galleryImages["name"]);
- 
-    for($i=0; $i<$imagesCount; $i++){
-        if($galleryImages["error"][$i] === 0){
-            $galleryImageName = time() . "_" . rand(100, 900) . "_" . basename($galleryImages["name"][$i]);
-$targetDir = "../../uploads/";
-$targetDir = "../../uploads/";
-            $targetPath =  "../../uploads/";
+            // INSERT MAIN BANQUET DATA
+            $stmt = $pdo->prepare("INSERT INTO `banquets` (`owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
+            $stmt->execute([$owner_id, $Banquet_name, $location, $capacity, $price, $description, $targetFile]);
+
+            // GET LAST INSERTED ID
+            $banquet_id = $pdo->lastInsertId();
+
+            // NOW HANDLE GALLERY IMAGES
+            if (isset($_FILES["GalleryImages"])) {
+                $galleryImages = $_FILES["GalleryImages"];
+                $imagesCount = count($galleryImages["name"]);
+
+                for ($i = 0; $i < $imagesCount; $i++) {
+                    if ($galleryImages["error"][$i] === 0) {
+                        $galleryImageName = time() . "_" . rand(1000, 9999) . "_" . basename($galleryImages["name"][$i]);
+                        $targetPath = "../../uploads/" . $galleryImageName;
+
+                        if (move_uploaded_file($galleryImages["tmp_name"][$i], $targetPath)) {
+                            // INSERT INTO banquet_images TABLE
+                            $stmt2 = $pdo->prepare("INSERT INTO `banquet_images` (`banquet_id`, `image`, `uploaded_at`) VALUES (?, ?, NOW())");
+                            $stmt2->execute([$banquet_id, $targetPath]);
+                        }
+                    }
+                }
+            }
+
+            $_SESSION['success'] = "Banquet & Gallery Images uploaded successfully.";
+            header("Location: add_banquet.php");
+            exit();
+
+        } else {
+            $_SESSION['error'] = "Cover image upload failed.";
         }
+    } else {
+        $_SESSION['error'] = "Invalid cover image file type.";
     }
-    $galleryFileName = 
-    $targetGallery = $targetDir . time() . "_" . $fileName;
-    $galleryFileType = strtolower(pathinfo($targetGallery, PATHINFO_EXTENSION));
-
-    $_SESSION['success'] = "Banquet Added successfully";
-    header("Location: add_banquet.php");
-    exit();
-  }else{
-    $_SESSION['error'] = "Image upload failed";
-
-  }
-}else{
-    $_SESSION['error'] = "File type error";
-}
 }
 ?>
+
+<style>
+.image-upload-section {
+    margin-top: 20px;
+}
+
+.upload-box {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed #bbb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    background: #f4f6f8;
+    position: relative;
+    transition: border-color 0.3s ease;
+}
+
+.upload-box:hover {
+    border-color: #007bff;
+}
+
+.plus-icon {
+    font-size: 40px;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.preview-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.preview-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #ccc;
+}
+
+.remove-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: white;
+    color: red;
+    border-radius: 50%;
+    border: none;
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+}
+</style>
 
 
 <!-- Content Start -->
@@ -112,14 +183,31 @@ include("include/navbar.php");
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label small">Cover Image</label>
-                    <input type="file" name="cover_image" class="form-control" id="cover_image">
+
+                    <div class="image-upload-section" id="coverImageContainer">
+
+                        <label class="upload-box" id="coverUploadBox">
+                            <input type="file" name="cover_image" hidden accept="image/*" id="cover_image_input">
+                            <span>Cover image</span>
+                            <div class="plus-icon">+</div>
+
+                        </label>
+                    </div>
+
+
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label small">Images Gallery Max 5</label>
-                    <input type="file" name="GalleryImages[]" multiple accept="image/*" class="form-control"
-                        id="gallery_image">
+
+                    <div class="image-upload-section d-flex flex-wrap gap-3" id="imagePreviewContainer">
+                        <label class="upload-box">
+
+                            <input type="file" name="GalleryImages[]" multiple hidden accept="image/*"
+                                id="gallery_image">
+                            <span>Gallery images</span>
+                            <div class="plus-icon">+</div>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="d-grid mt-3">
@@ -128,6 +216,83 @@ include("include/navbar.php");
             </form>
         </div>
     </div>
+
+    <script>
+    // COVER IMAGE: Only one image, hide input after selection
+    document.getElementById("cover_image_input").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        const coverContainer = document.getElementById("coverImageContainer");
+        const uploadBox = document.getElementById("coverUploadBox");
+
+        // Remove previous preview if any
+        coverContainer.querySelectorAll(".preview-container").forEach(e => e.remove());
+
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.createElement("div");
+                wrapper.className = "preview-container";
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.className = "preview-thumb";
+
+                const removeBtn = document.createElement("button");
+                removeBtn.innerHTML = "×";
+                removeBtn.className = "remove-btn";
+                removeBtn.addEventListener("click", function() {
+                    wrapper.remove();
+                    document.getElementById("cover_image_input").value = "";
+                    uploadBox.style.display = "flex"; // Show again
+                });
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(removeBtn);
+
+                coverContainer.insertBefore(wrapper, uploadBox);
+                uploadBox.style.display = "none"; // Hide plus
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // GALLERY IMAGES: Multiple preview
+    document.getElementById("gallery_image").addEventListener("change", function(event) {
+        const files = event.target.files;
+        const previewContainer = document.getElementById("imagePreviewContainer");
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            if (file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "preview-container";
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.className = "preview-thumb";
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.innerHTML = "×";
+                    removeBtn.className = "remove-btn";
+                    removeBtn.addEventListener("click", function() {
+                        wrapper.remove();
+                    });
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    previewContainer.insertBefore(wrapper, previewContainer.querySelector(".upload-box"));
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+    </script>
+
+
+
 
     <?php 
 include("include/footer.php");

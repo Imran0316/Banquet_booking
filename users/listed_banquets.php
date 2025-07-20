@@ -18,12 +18,12 @@ $stmt = $pdo->query("SELECT * FROM banquets");
   font-family: 'Poppins', sans-serif;
 }
 .navbar{
-    background-color: black !important;
+    background-color: maroon !important;
 }
 .navbar-brand {
   font-family: 'Libre Baskerville', serif;
   font-size: 1.4rem;
-  color: goldenrod ;
+  color: gold ;
   
 }
 
@@ -35,7 +35,7 @@ $stmt = $pdo->query("SELECT * FROM banquets");
 }
 
 .navbar .navbar-nav .nav-item .nav-link:hover {
-  color: #C08B5C !important;
+  color: gold !important;
 }
 .hero-section {
     height: 450px;
@@ -66,6 +66,12 @@ $stmt = $pdo->query("SELECT * FROM banquets");
   color: maroon;
   background-color: goldenrod;
   font-size: 1.1rem;
+  border: none !important;
+  transition: all 0.3s ease-in;
+}
+.hero-section .btn:hover {
+    color: white;
+    background-color: maroon;
 }
 .card-title {
     font-size: 1.2rem;
@@ -90,6 +96,18 @@ $stmt = $pdo->query("SELECT * FROM banquets");
 
 .card-body h5 {
   font-size: 1.1rem;
+}
+.sec-2{
+    
+    background: url('../assets/images/pattern2.jpg') center/cover no-repeat;
+    position: relative !important ;
+    background-attachment: fixed;
+    
+}
+.banquet-card i{
+  color: #f39c12;
+  font-size: .8rem;
+
 }
 
 </style>
@@ -120,21 +138,11 @@ $stmt = $pdo->query("SELECT * FROM banquets");
 
                     <!-- Card Body -->
                     <div class="card-body">
-                        <h5 class="fw-semibold mb-1"><?php echo $banquet_row["name"]; ?></h5>
-                        <small class="text-muted d-block mb-2">
-                            📍 <?php echo $banquet_row["location"]; ?>
-                        </small>
-
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="small text-muted">👥 Capacity:</span>
-                            <span class="small"><?php echo $banquet_row["capacity"]; ?> People</span>
-                        </div>
-
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="small text-muted">💰 Price:</span>
-                            <span class="small fw-bold text-dark">PKR <?php echo $banquet_row["price"]; ?></span>
-                        </div>
-
+                        <h5 class="fw-semibold mb-1"><?php echo $banquet_row["name"] . " | " . $banquet_row["location"]; ?><span> | Banquet </span></h5>
+                        
+                        <p class="card-text mb-2">Starting From Rs. <?php echo $banquet_row["price"]; ?></p>
+                       
+                        <p><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"><i class="fa-solid fa-star"></i></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><span></space></p>
                         <!-- Button -->
                         <a href="booking_page.php?id=<?php echo $banquet_row['id']; ?>"
                             class="btn btn-sm btn-dark w-100 rounded-pill">
