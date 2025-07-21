@@ -4,142 +4,233 @@ include("../../db.php");
 include("include/header.php");
 include("include/sidebar.php");
 
-// Assuming ?id=owner_id is passed
 $owner_id = $_GET['id'] ?? 0;
-
+// $owner_id = $_SESSION["owner_id"] ?? 0;
 $stmt = $pdo->prepare("SELECT * FROM banquet_owner WHERE id = ?");
 $stmt->execute([$owner_id]);
-$owner = $stmt->fetch(PDO::FETCH_ASSOC);
+$owner_data = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <div class="content">
-    <?php include("include/navbar.php"); ?>
+  <?php include("include/navbar.php"); ?>
 
-    <div class="container-fluid mt-4">
-        <div class="card shadow rounded-4">
-            <div class="card-body p-4">
-                <h4 class="mb-3 text-primary">👤 Owner Profile</h4>
+  <div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+      <!-- Left: Profile Info -->
+      <div class="col-lg-5 mb-4">
+        <div class="card shadow-lg rounded-4 border-0" style="max-width: 650px; background: #fff5f7;">
+          <div class="card-body p-4">
+            <h4 class="mb-4 text-center fw-bold" style="color:#800000;">Banquet Owner Profile</h4>
 
-                <!-- Tabs -->
-                <ul class="nav nav-tabs" id="profileTabs" role="tablist">
-                    <li class="nav-item">
-                        <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic"
-                            type="button" role="tab">Basic Info</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" id="banquets-tab" data-bs-toggle="tab" data-bs-target="#banquets"
-                            type="button" role="tab">Banquets</button>
-                    </li>
-                    <li class="nav-item">
-                        <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity"
-                            type="button" role="tab">Activity</button>
-                    </li>
-                </ul>
+            <!-- Profile Image Edit -->
+            <form action="update_owner_profile.php" method="POST" enctype="multipart/form-data" id="profileForm">
+              <input type="hidden" name="owner_id" value="<?php echo $owner_data['id']; ?>">
+              <div class="text-center mb-4 position-relative">
+                <div style="display:inline-block; position:relative;">
+                  <img id="profileImgPreview"
+                    src="<?php echo $owner_data['owner_image'] ? '../../uploads/' . $owner_data['owner_image'] : 'https://ui-avatars.com/api/?name=' . urlencode($owner_data['name']); ?>"
+                    class="rounded-circle border border-3"
+                    style="width:130px;height:130px;object-fit:cover;background:#fff;">
+                  <label for="profileImgInput" class="position-absolute" style="bottom:10px;right:10px;cursor:pointer;">
+                    <span class="bg-maroon text-white rounded-circle p-2 border shadow" style="font-size:16px;">
+                      <i class="fa fa-pen"></i>
+                    </span>
+                  </label>
+                  <input type="file" name="image" id="profileImgInput" class="d-none" accept="image/*">
+                </div>
+                <h5 class="mt-3 mb-0 fw-bold" style="color:#800000;"><?php echo htmlspecialchars($owner_data['name']); ?>
+                </h5>
+                <span
+                  class="badge bg-maroon text-white px-3 py-1"><?php echo ($owner_data["status"] == 'approved') ? 'Approved' : 'Pending'; ?></span>
+                <div class="mt-1 text-muted" style="font-size:13px;">Joined:
+                  <?php echo date('d M Y', strtotime($owner_data['created_at'])); ?>
+                </div>
+              </div>
 
-                <!-- Tab Content -->
-                <div class="tab-content mt-3" id="profileTabsContent">
-                    <!-- Basic Info -->
-                    <form action="update_owner_profile.php" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="owner_id" value="<?php echo $owner['id']; ?>">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"><i class="fa fa-user me-1"></i> Name</label>
+                  <input type="text" class="form-control rounded-pill" name="name"
+                    value="<?php echo htmlspecialchars($owner_data['name']); ?>" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"><i class="fa fa-envelope me-1"></i> Email</label>
+                  <input type="email" class="form-control rounded-pill" name="email"
+                    value="<?php echo htmlspecialchars($owner_data['email']); ?>" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold"><i class="fa fa-phone me-1"></i> Phone</label>
+                  <input type="text" class="form-control rounded-pill" name="phone"
+                    value="<?php echo htmlspecialchars($owner_data['phone']); ?>" required>
+                </div>
+                <div class="col-12 mt-3">
+                  <button type="submit" name="update_profile" class="btn w-100 py-2 fw-bold rounded-pill"
+                    style="background:linear-gradient(90deg,#800000,#b71c1c);color:#fff;">Update Profile</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
 
-                        <div class="row g-3">
-                            <!-- Profile Image -->
-                            <div class="col-md-12 text-center">
-                                <img src="../../uploads<?php echo $owner['owner_image']; ?>" alt="Profile Image" width="120"
-                                    height="120" class="rounded-circle mb-2" style="object-fit: cover;">
-                                <div>
-                                    <input type="file" name="image" class="form-control-sm">
-                                </div>
-                            </div>
+      <!-- Right: Tabs -->
+      <div class="col-lg-7">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mt-4" id="profileTabs" role="tablist" style="border-bottom:2px solid #800000;">
 
-                            <!-- Name -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Name</label>
-                                <input type="text" class="form-control" name="name"
-                                    value="<?php echo $owner['name']; ?>" required>
-                            </div>
+          <li class="nav-item">
+            <button class="nav-link active fw-bold" id="banquets-tab" data-bs-toggle="tab" data-bs-target="#banquets"
+              type="button" role="tab" style="color:#800000;">Banquets</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link fw-bold" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity"
+              type="button" role="tab" style="color:#800000;">Activity</button>
+          </li>
+        </ul>
 
-                            <!-- Email -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Email</label>
-                                <input type="email" class="form-control" name="email"
-                                    value="<?php echo $owner['email']; ?>" required>
-                            </div>
+        <div class="tab-content mt-3" id="profileTabsContent">
 
-                            <!-- Phone -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Phone</label>
-                                <input type="text" class="form-control" name="phone"
-                                    value="<?php echo $owner['phone']; ?>" required>
-                            </div>
 
-                            <!-- Status (Read-only) -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Status</label>
-                                <input type="text" class="form-control"
-                                    value="<?php echo ($owner['status'] == 'approved') ? 'Approved' : 'Pending'; ?>"
-                                    readonly>
-                            </div>
-
-                            <!-- Created At (Read-only) -->
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Created At</label>
-                                <input type="text" class="form-control" value="<?php echo $owner['created_at']; ?>"
-                                    readonly>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <div class="col-12">
-                                <button type="submit" name="update_profile" class="btn btn-primary">Update Profile</button>
-                            </div>
-                        </div>
-                    </form>
-
-                    <!-- Banquets -->
-                    <div class="tab-pane fade" id="banquets" role="tabpanel">
-                        <div class="mt-3">
-                            <?php
+          <!-- Banquets Tab -->
+          <div class="tab-pane fade show active" id="banquets" role="tabpanel">
+            <div class="mt-3">
+              <?php
               $stmt = $pdo->prepare("SELECT * FROM banquets WHERE owner_id = ?");
               $stmt->execute([$owner_id]);
               $banquets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
               if ($banquets): ?>
-                            <div class="row">
-                                <?php foreach ($banquets as $b): ?>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card h-100 shadow-sm border">
-                                        <img src="../../uploads<?php echo $b['image']; ?>" class="card-img-top"
-                                            height="180" style="object-fit: cover;">
-                                        <div class="card-body">
-                                            <h5 class="card-title"><?php echo htmlspecialchars($b['name']); ?></h5>
-                                            <p class="text-muted mb-1">📍
-                                                <?php echo htmlspecialchars($b['location']); ?></p>
-                                            <p>💰 PKR <?php echo number_format($b['price']); ?></p>
-                                            <a href="edit_banquet.php?id=<?php echo $b['id']; ?>"
-                                                class="btn btn-sm btn-outline-primary">View</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php endforeach; ?>
-                            </div>
-                            <?php else: ?>
-                            <div class="alert alert-info">No banquets found for this owner.</div>
-                            <?php endif; ?>
+                <div class="row">
+                  <?php foreach ($banquets as $b): ?>
+                    <div class="col-md-6 mb-4">
+                      <div class="card h-100 shadow border-0" style="background:#fff0f0;">
+                        <img src="../../uploads<?php echo $b['image']; ?>" class="card-img-top rounded-top" height="160"
+                          style="object-fit:cover;">
+                        <div class="card-body">
+                          <h5 class="card-title fw-bold" style="color:#800000;"><?php echo htmlspecialchars($b['name']); ?>
+                          </h5>
+                          <p class="text-muted mb-1"><i class="fa fa-map-marker-alt me-1"></i>
+                            <?php echo htmlspecialchars($b['location']); ?></p>
+                          <p class="mb-2"><span class="badge bg-maroon">PKR <?php echo number_format($b['price']); ?></span>
+                          </p>
+                          <a href="edit_banquet.php?id=<?php echo $b['id']; ?>"
+                            class="btn btn-sm btn-outline-maroon rounded-pill">View</a>
                         </div>
+                      </div>
                     </div>
-
-                    <!-- Activity (Placeholder) -->
-                    <div class="tab-pane fade" id="activity" role="tabpanel">
-                        <div class="mt-3">
-                            <p class="text-muted">Activity logs, bookings, or changes will appear here.</p>
-                            <div class="alert alert-secondary">Coming soon...</div>
-                        </div>
-                    </div>
+                  <?php endforeach; ?>
                 </div>
+              <?php else: ?>
+                <div class="alert alert-info">No banquets found for this owner.</div>
+              <?php endif; ?>
             </div>
-        </div>
-    </div>
+          </div>
 
+          <!-- Activity Tab -->
+          <div class="tab-pane fade" id="activity" role="tabpanel">
+            <div class="mt-3">
+              <p class="text-muted">Activity logs, bookings, or changes will appear here.</p>
+              <div class="alert alert-secondary">Coming soon...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Maroon Theme Styles & Image Preview JS -->
+<style>
+  .bg-maroon {
+    background: #800000 !important;
+  }
+
+  .text-maroon {
+    color: #800000 !important;
+  }
+
+  .text-gold {
+    color: #DAA520 !important;
+  }
+
+  .bg-gold {
+    background: #DAA520 !important;
+  }
+
+  .btn-outline-maroon {
+    border: 1.5px solid #DAA520;
+    color: #800000;
+  }
+
+  .btn-outline-maroon:hover {
+    background: #DAA520;
+    color: #fff;
+    border-color: #800000;
+  }
+
+  .card {
+    border-radius: 1.5rem !important;
+    border: 2px solid #DAA52044 !important;
+    box-shadow: 0 4px 24px #DAA52022;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  .badge.bg-maroon {
+    background: linear-gradient(90deg, #800000, #DAA520) !important;
+    color: #fff !important;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .badge.bg-gold {
+    background: linear-gradient(90deg, #DAA520, #800000) !important;
+    color: #fff !important;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .nav-tabs .nav-link.active {
+    background: linear-gradient(90deg, #80000022, #DAA52022);
+    color: #800000 !important;
+    border-bottom: 3px solid #DAA520 !important;
+    font-weight: bold;
+  }
+
+  .nav-tabs .nav-link {
+    color: #800000 !important;
+    font-weight: 500;
+    border-radius: 8px 8px 0 0;
+    margin-right: 4px;
+    transition: background 0.2s;
+  }
+
+  .nav-tabs .nav-link:hover {
+    background: #fffbe6;
+    color: #DAA520 !important;
+  }
+
+  .btn-outline-maroon {
+    border: 1.5px solid #DAA520;
+    color: #800000;
+    font-weight: 500;
+  }
+
+  .btn-outline-maroon:hover {
+    background: linear-gradient(90deg, #DAA520, #800000);
+    color: #fff;
+    border-color: #800000;
+  }
+</style>
+<script>
+  document.getElementById('profileImgInput').addEventListener('change', function (e) {
+    const [file] = e.target.files;
+    if (file) {
+      document.getElementById('profileImgPreview').src = URL.createObjectURL(file);
+    }
+  });
+</script>
 
 <?php include("include/footer.php"); ?>

@@ -1,4 +1,3 @@
-
 <?php 
 session_start();
 include("../../db.php");
@@ -65,6 +64,65 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
 ?>
 
 <style>
+.banquet-form {
+    background: linear-gradient(120deg,#fffbe6 60%,#fff5f5 100%);
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 32px #DAA52022;
+    max-width: 900px;
+    margin: auto;
+}
+.banquet-form h5 {
+    font-family: 'Playfair Display',serif;
+    color: #800000 !important;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.form-label {
+    color: #800000;
+    font-weight: 500;
+}
+.form-control, textarea {
+    border-radius: 1rem !important;
+    border: 2px solid #DAA520 !important;
+    background: #fffbe6 !important;
+}
+.form-control:focus, textarea:focus {
+    box-shadow: 0 0 0 2px #DAA52044 !important;
+    border-color: #800000 !important;
+}
+.btn-primary, .btn.btn-primary {
+    background: linear-gradient(90deg,#800000,#DAA520);
+    border: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-radius: 2rem;
+    box-shadow: 0 2px 10px #DAA52044;
+}
+.btn-primary:hover, .btn.btn-primary:hover {
+    background: linear-gradient(90deg,#DAA520,#800000);
+}
+.upload-box {
+    border: 2px dashed #DAA520;
+    background: #fffbe6;
+}
+.upload-box:hover {
+    border-color: #800000;
+    background: #fff5f5;
+}
+.plus-icon {
+    font-size: 40px;
+    color: #DAA520;
+    font-weight: bold;
+}
+.preview-thumb {
+    border: 2px solid #DAA520;
+}
+.remove-btn {
+    background: white;
+    color: #800000;
+    border: 2px solid #DAA520;
+}
 .image-upload-section {
     margin-top: 20px;
 }

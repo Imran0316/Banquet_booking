@@ -11,7 +11,7 @@ $image = $_FILES['image']['name'];
 $tmp = $_FILES['image']['tmp_name'];
 
 if (!empty($image)) {
-    $imagePath = "../../uploads" . $image;
+    $imagePath = "../../uploads/" . $image;
     move_uploaded_file($tmp, $imagePath);
     $stmt = $pdo->prepare("UPDATE banquet_owner SET name=?, email=?, phone=?, owner_image=? WHERE id=?");
     $stmt->execute([$name, $email, $phone, $image, $owner_id]);

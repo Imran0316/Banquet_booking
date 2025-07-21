@@ -4,40 +4,40 @@ session_start();
 include '../db.php';
 include '../includes/header.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["signup"])){
-$name = $_POST["username"];
-$email = $_POST["email"];
-$phone = $_POST["phone"];
-$password = $_POST["password"];
-$confirm_pass = $_POST["confirm_pass"];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["signup"])) {
+    $name = $_POST["username"];
+    $email = $_POST["email"];
+    $phone = $_POST["phone"];
+    $password = $_POST["password"];
+    $confirm_pass = $_POST["confirm_pass"];
 
-if(empty($name) || empty($email) || empty($phone) || empty($password) || empty($confirm_pass)) {
-  $_SESSION['error'] = "All fields are required.";
-  header("Location: register.php");
-  exit();
-}else if($password !== $confirm_pass) {
-   $_SESSION['error'] = "Passwords do not match.";
-     header("Location: register.php");
-      exit();
-
-}else{
-    $stmt = $pdo->prepare("SELECT * FROM banquet_owner WHERE email = ?");
-    $stmt->execute([$email]);
-    if($stmt->rowCount() > 0){
-        $_SESSION['error'] = "Email already exists.";
-          header("Location: register.php");
-  exit();
-    }else{
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("INSERT INTO `banquet_owner`(`name`, `email`, `phone`, `password`, `created_at`) VALUES (?,?,?,?,NOW())");
-        $stmt->execute([$name,$email,$phone,$hashed_password]);
-
-        header("Location: index.php?registered=1");
+    if (empty($name) || empty($email) || empty($phone) || empty($password) || empty($confirm_pass)) {
+        $_SESSION['error'] = "All fields are required.";
+        header("Location: register.php");
         exit();
+    } else if ($password !== $confirm_pass) {
+        $_SESSION['error'] = "Passwords do not match.";
+        header("Location: register.php");
+        exit();
+
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM banquet_owner WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['error'] = "Email already exists.";
+            header("Location: register.php");
+            exit();
+        } else {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("INSERT INTO `banquet_owner`(`name`, `email`, `phone`, `password`, `created_at`) VALUES (?,?,?,?,NOW())");
+            $stmt->execute([$name, $email, $phone, $hashed_password]);
+
+            header("Location: index.php?registered=1");
+            exit();
+        }
+
+
     }
-
-
-}
 }
 ?>
 
@@ -47,12 +47,12 @@ if(empty($name) || empty($email) || empty($phone) || empty($password) || empty($
         <div class="col-md-6 offset-md-3">
             <h2 class="text-center">Register Now!</h2>
             <?php
-            if(isset($_SESSION['error'])) {
+            if (isset($_SESSION['error'])) {
                 echo "<p class='text-danger'>" . $_SESSION['error'] . "</p>";
                 unset($_SESSION['error']);
-                
+
             }
-            if(isset($_SESSION['success'])) {
+            if (isset($_SESSION['success'])) {
                 echo "<p class='text-success'>" . $_SESSION['success'] . "</p>";
                 unset($_SESSION['success']);
             }
