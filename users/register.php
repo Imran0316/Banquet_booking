@@ -87,6 +87,3 @@ if(empty($name) || empty($email) || empty($phone) || empty($password) || empty($
 
 
 
-<?php
-include '../includes/footer.php';
-?>
