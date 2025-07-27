@@ -8,9 +8,6 @@ $banquet_id = $_GET["id"];
 $stmt = $pdo->prepare("SELECT * FROM banquets WHERE id = ?");
 $stmt->execute([$banquet_id]);
 $banquet_row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Get owner_id for hidden field (if needed)
-$owner_id = $banquet_row['owner_id'];
 ?>
 
 <!-- Content Start -->
@@ -71,22 +68,10 @@ $owner_id = $banquet_row['owner_id'];
 
             <div class="mb-3">
                 <label class="form-label">Upload New Cover Image</label>
-                <input type="file" name="cover_image" class="form-control" accept="image/*" onchange="previewCover(this)">
-                <img id="coverPreview" src="" style="display:none;width:120px;margin-top:10px;" class="img-thumbnail">
+                <input type="file" name="cover_image" class="form-control">
             </div>
-            <script>
-            function previewCover(input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('coverPreview').src = e.target.result;
-                        document.getElementById('coverPreview').style.display = 'block';
-                    }
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-            </script>
 
+                        
             <!-- Gallery Images Section -->
             <div class="mb-3">
                 <label class="form-label">Gallery Images</label>
@@ -109,11 +94,20 @@ $owner_id = $banquet_row['owner_id'];
             </div>
 
             <div class="d-grid">
-                <button type="submit" name="banquet_update" class="btn btn-primary">Update Banquet</button>
+                <button type="submit" name="banquet_update" class="btn btn-primary update_btn">Update Banquet</button>
             </div>
         </form>
     </div>
 </div>
+<style>
+    .update_btn {
+        background: linear-gradient(90deg, #800000, #DAA520);
+        color: #fff;
+        font-size: 1.1rem;
+        box-shadow: 0 2px 10px rgba(218, 165, 32, 0.44);
+        border: none;
+    }
+</style>
 
 <?php include("include/footer.php"); ?>
 

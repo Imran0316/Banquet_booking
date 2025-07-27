@@ -1,102 +1,153 @@
-<?php 
+<?php
 session_start();
 include("../db.php");
 include("../includes/header.php");
 $banquet_id = $_GET["id"];
-// $user_id = $_SESSION['id'];
+$user_id = $_SESSION['id'];
 $page = "inner";
+
+$stmt = $pdo->prepare("SELECT * FROM `banquets` WHERE id = ?");
+$stmt->execute([$banquet_id]);
+$banquet_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$stmt2 = $pdo->prepare("SELECT * FROM `banquet_images` WHERE id = ?");
+$stmt2->execute([$banquet_id]);
+$gallery =$stmt2->fetch(PDO::FETCH_ASSOC);
 ?>
 
 
 
 <style>
-    .navbar{
+    .navbar {
         background-color: red !important;
     }
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', sans-serif;
-}
 
-.container-wrapper {
-    max-width: 1200px;
-    /* margin: 40px auto; */
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    padding-top: 100px !important;
-    align-items: center;
-    justify-content: center;
-}
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-.banquet-details {
-    flex: 1 1 60%;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-}
+    .container-wrapper {
+        max-width: 1200px;
+        /* margin: 40px auto; */
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+        padding-top: 100px !important;
+        align-items: center;
+        justify-content: center;
+    }
 
-.booking-widget {
-    flex: 1 1 35%;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 20px;
-}
+    .banquet-details {
+        flex: 1 1 60%;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
 
-.price-box {
-    font-size: 22px;
-    font-weight: bold;
-    color: #28a745;
-}
+    .booking-widget {
+        flex: 1 1 35%;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 20px;
+    }
 
-.form-label {
-    font-weight: 500;
-    margin-top: 15px;
-}
+    .price-box {
+        font-size: 22px;
+        font-weight: bold;
+        color: #28a745;
+    }
 
-.badge-tag {
-    background-color: #e9ecef;
-    color: #333;
-    margin-right: 6px;
-}
+    .form-label {
+        font-weight: 500;
+        margin-top: 15px;
+    }
 
-.section-divider {
-    border-top: 1px solid #ddd;
-    margin: 25px 0;
-}
+    .badge-tag {
+        background-color: #e9ecef;
+        color: #333;
+        margin-right: 6px;
+    }
 
-#timeSlot option:disabled {
-    color: red;
-    font-style: italic;
-}
+    .section-divider {
+        border-top: 1px solid #ddd;
+        margin: 25px 0;
+    }
+
+    #timeSlot option:disabled {
+        color: red;
+        font-style: italic;
+    }
 
 
+ 
+  @media (max-width: 767px) {
+    .main-gallery-image {
+      height: 300px !important;
+    }
+  }
 </style>
 
 <!-- Content Start -->
 <div class="content">
     <?php
-include("../includes/navbar.php");
+    include("../includes/navbar.php");
 
-?>
+    ?>
+    <div class="container-fluid my-4">
+        <div class="row">
+            <!-- Main Image -->
+            <div class="col-lg-8 col-12 mb-3 mb-lg-0 ">
+                <img id="mainImage" src="../uploads<?php echo $banquet_data["image"] ?>" class="img-fluid w-100 rounded main-gallery-image"
+                    style="height: 530px; object-fit: cover;" alt="Main Image">
+            </div>
 
-  <?php
-            if(isset($_SESSION['error'])) {
-                echo "<div class='alert alert-danger'>" . $_SESSION['error'] . "</div>";
-                unset($_SESSION['error']);
-                
-            }
-            if(isset($_SESSION['success'])) {
-                echo "<div class='alert alert-success'>" . $_SESSION['success'] . "</div>";
-                unset($_SESSION['success']);
-            }
-            ?>
+            <!-- Thumbnails -->
+            <div class="col-lg-4 col-12">
+                <div class="d-none d-lg-flex flex-column gap-3 h-100">
+                    <?php
+                    foreach ($gallery as $image) :
+                    ?>
+                    <img src="../uploads/<?php echo $image["image"]?>" class="img-fluid rounded thumb-img"
+                        style="height: calc(500px / 3); object-fit: cover; cursor: pointer;"
+                        onclick="changeImage(this)">
+                   <?php endforeach;?>
+                </div>
+
+                <!-- Mobile Thumbnails -->
+                <div class="d-flex d-lg-none gap-2 mt-3">
+                    <img src="../uploads/1753589936_library-of-congress-xPes12KkVUg-unsplash-min.jpg" class="img-fluid rounded thumb-img"
+                        style="height: 80px; width: 30%; object-fit: cover; cursor: pointer;"
+                        onclick="changeImage(this)">
+                    <img src="../uploads/1753591078_8622_andra-c-taylor-jr-Qd-lPUtupYA-unsplash-min.jpg" class="img-fluid rounded thumb-img"
+                        style="height: 80px; width: 30%; object-fit: cover; cursor: pointer;"
+                        onclick="changeImage(this)">
+                    <img src="../uploads/1753286248_6211_arne-hellin-mhZBBx3BIwc-unsplash.jpg" class="img-fluid rounded thumb-img"
+                        style="height: 80px; width: 30%; object-fit: cover; cursor: pointer;"
+                        onclick="changeImage(this)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <?php
+    if (isset($_SESSION['error'])) {
+        echo "<div class='alert alert-danger'>" . $_SESSION['error'] . "</div>";
+        unset($_SESSION['error']);
+
+    }
+    if (isset($_SESSION['success'])) {
+        echo "<div class='alert alert-success'>" . $_SESSION['success'] . "</div>";
+        unset($_SESSION['success']);
+    }
+    ?>
     <div class="container-wrapper">
-        
+
         <!-- Left: Banquet Details -->
         <div class="banquet-details">
             <img src="uploads/banquet.jpg" alt="Banquet" class="img-fluid rounded mb-4">
@@ -151,14 +202,14 @@ include("../includes/navbar.php");
 
             <form action="submit_booking.php?id=<?php echo $banquet_id ?>" method="POST">
                 <label class="form-label">Event Date</label>
-                 <input type="text" name="event_date" id="myDatePicker" class="form-control" placeholder="Select date">
 
                 <input type="hidden" name="banquetID" value="<?php echo $banquet_id ?>" class="form-control">
 
                 <input type="hidden" name="userID" value="<?php echo $user_id ?>" class="form-control">
+                <input type="text" name="event_date" id="myDatePicker" class="form-control" placeholder="Select date">
 
                 <label class="form-label">Time Slot</label>
-                <select name="time_slot"  id="timeSlot" class="form-select" required>
+                <select name="time_slot" id="timeSlot" class="form-select" required>
                     <option value="">-- Select Time --</option>
                     <option value="Morning (10 AM - 2 PM)">Morning (10 AM - 2 PM)</option>
                     <option value="Evening (7 PM - 11 PM)">Evening (7 PM - 11 PM)</option>
@@ -182,78 +233,86 @@ include("../includes/navbar.php");
         </div>
 
     </div>
-    
-<?php 
-include("../includes/footer.php");
-?>
 
-<script>
-$(document).ready(function() {
-    $.getJSON("get_booked_dates.php?id=<?php echo $banquet_id ?>", function(data) {
-        const fullyBooked = data.fullyBooked;
-        const partiallyBooked = data.partiallyBooked;
+    <?php
+    include("../includes/footer.php");
+    ?>
 
-        flatpickr("#myDatePicker", {
-            dateFormat: "Y-m-d",
-            disable: fullyBooked,
-            onDayCreate: function(dObj, dStr, fp, dayElem) {
-                const date = dayElem.dateObj;
-                // const ymd = date.toISOString().slice(0, 10);
-                const ymd = fp.formatDate(dayElem.dateObj, "Y-m-d");
-                if (fullyBooked.includes(ymd)) {
-                    dayElem.classList.add("fully-booked");
-                } else if (partiallyBooked.includes(ymd)) {
-                    dayElem.classList.add("partially-booked");
-                }
-            },
-            onChange: function(selectedDates, dateStr) {
-                $.getJSON("get_booked_slots.php", {
-                    date: dateStr
-                }, function(bookedSlots) {
-                    const slotMap = {
-                        "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
-                        "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
-                    };
+    <script>
+        $(document).ready(function () {
+            $.getJSON("get_booked_dates.php?id=<?php echo $banquet_id ?>", function (data) {
+                const fullyBooked = data.fullyBooked;
+                const partiallyBooked = data.partiallyBooked;
 
-                    $("#timeSlot option").each(function() {
-                        const originalText = $(this).data("original-text");
-                        if (originalText) {
-                            $(this).text(originalText);
+                flatpickr("#myDatePicker", {
+                    minDate: "today",
+                    maxDate: new Date().fp_incr(365), // Allow booking up to
+                    dateFormat: "Y-m-d",
+                    disable: fullyBooked,
+                    onDayCreate: function (dObj, dStr, fp, dayElem) {
+                        const date = dayElem.dateObj;
+                        // const ymd = date.toISOString().slice(0, 10);
+                        const ymd = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                        if (fullyBooked.includes(ymd)) {
+                            dayElem.classList.add("fully-booked");
+                        } else if (partiallyBooked.includes(ymd)) {
+                            dayElem.classList.add("partially-booked");
                         }
-                        $(this).prop("disabled", false);
-                    });
+                    },
+                    onChange: function (selectedDates, dateStr) {
+                        $.getJSON("get_booked_slots.php", {
+                            date: dateStr
+                        }, function (bookedSlots) {
+                            const slotMap = {
+                                "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
+                                "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
+                            };
 
-                    bookedSlots.forEach(function(slotLabel) {
-                        const slotValue = slotMap[slotLabel];
-                        const $option = $("#timeSlot option[value='" +
-                            slotValue + "']");
-                        if ($option.length) {
-                            if (!$option.data("original-text")) {
-                                $option.data("original-text", $option
-                                    .text());
-                            }
-                            $option.text($option.text() + " (Booked)");
-                            $option.prop("disabled", true);
-                        }
-                    });
+                            $("#timeSlot option").each(function () {
+                                const originalText = $(this).data("original-text");
+                                if (originalText) {
+                                    $(this).text(originalText);
+                                }
+                                $(this).prop("disabled", false);
+                            });
 
-                    $("#timeSlot").val("");
+                            bookedSlots.forEach(function (slotLabel) {
+                                const slotValue = slotMap[slotLabel];
+                                const $option = $("#timeSlot option[value='" +
+                                    slotValue + "']");
+                                if ($option.length) {
+                                    if (!$option.data("original-text")) {
+                                        $option.data("original-text", $option
+                                            .text());
+                                    }
+                                    $option.text($option.text() + " (Booked)");
+                                    $option.prop("disabled", true);
+                                }
+                            });
+
+                            $("#timeSlot").val("");
+                        });
+                    }
                 });
-            }
+            });
         });
-    });
-});
-</script>
-<style>
-.flatpickr-day.partially-booked {
-    border-bottom: 2px solid #ff9800 !important;
-    background: #fffbe6;
-}
+    </script>
+    <script>
+        function changeImage(thumb) {
+            document.getElementById("mainImage").src = thumb.src;
+        }
+    </script>
 
-.flatpickr-day.fully-booked {
-    border-bottom: 2px solid #e53935 !important;
-    /* Red underline */
-    background: #ffeaea;
-    color: #b71c1c;
-}
-</style>
+    <style>
+        .flatpickr-day.partially-booked {
+            border-bottom: 2px solid #ff9800 !important;
+            background: #fffbe6;
+        }
+
+        .flatpickr-day.fully-booked {
+            border-bottom: 2px solid #e53935 !important;
+            /* Red underline */
+            background: #ffeaea;
+            color: #b71c1c;
+        }
+    </style>
