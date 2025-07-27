@@ -8,6 +8,9 @@ $banquet_id = $_GET["id"];
 $stmt = $pdo->prepare("SELECT * FROM banquets WHERE id = ?");
 $stmt->execute([$banquet_id]);
 $banquet_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Get owner_id for hidden field (if needed)
+$owner_id = $banquet_row['owner_id'];
 ?>
 
 <!-- Content Start -->
@@ -68,7 +71,41 @@ $banquet_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             <div class="mb-3">
                 <label class="form-label">Upload New Cover Image</label>
-                <input type="file" name="cover_image" class="form-control">
+                <input type="file" name="cover_image" class="form-control" accept="image/*" onchange="previewCover(this)">
+                <img id="coverPreview" src="" style="display:none;width:120px;margin-top:10px;" class="img-thumbnail">
+            </div>
+            <script>
+            function previewCover(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('coverPreview').src = e.target.result;
+                        document.getElementById('coverPreview').style.display = 'block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            </script>
+
+            <!-- Gallery Images Section -->
+            <div class="mb-3">
+                <label class="form-label">Gallery Images</label>
+                <div class="d-flex flex-wrap gap-3 mb-2">
+                    <?php
+                    $stmt_gallery = $pdo->prepare("SELECT * FROM banquet_images WHERE banquet_id = ?");
+                    $stmt_gallery->execute([$banquet_id]);
+                    while ($img = $stmt_gallery->fetch(PDO::FETCH_ASSOC)) {
+                        echo '<div style="position:relative;display:inline-block;">
+                                <img src="../../uploads/' . $img['image'] . '" class="img-thumbnail" style="width:90px;height:90px;object-fit:cover;">
+                                <a href="delete_gallery_image.php?id=' . $img['id'] . '&banquet_id=' . $banquet_id . '" 
+                                   onclick="return confirm(\'Delete this image?\')" 
+                                   style="position:absolute;top:2px;right:2px;background:#800000;color:#fff;border-radius:50%;padding:2px 7px;text-decoration:none;font-weight:bold;">×</a>
+                              </div>';
+                    }
+                    ?>
+                </div>
+                <input type="file" name="gallery_images[]" class="form-control" multiple>
+                <small class="text-muted">You can upload more images. Existing images can be deleted above.</small>
             </div>
 
             <div class="d-grid">

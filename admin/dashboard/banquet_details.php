@@ -24,8 +24,17 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
     <style>
         .table th { color: black !important; }
         .cover-img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; }
-        .gallery-thumb { height: 100px; width: auto; object-fit: cover; border-radius: 8px; transition: 0.3s; cursor: pointer; }
-        .gallery-thumb:hover { transform: scale(1.05); }
+        .gallery-thumb { height: 100px; width: 100%; max-width: 120px; object-fit: cover; border-radius: 8px; transition: 0.3s; cursor: pointer; box-shadow: 0 2px 8px #DAA52022; border: 2px solid #fffbe6; }
+        .gallery-thumb:hover { transform: scale(1.07); border-color: #DAA520; }
+        @media (max-width: 575px) {
+            .gallery-thumb { height: 70px; max-width: 90px; }
+            .table th, .table td { font-size: 13px; padding: 6px 4px; }
+        }
+        /* Modal image always same size and centered */
+        .gallery-modal-img { width: 100%; max-width: 700px; height: 400px; object-fit: contain; margin: auto; display: block; background: #fffbe6; border-radius: 12px; }
+        @media (max-width: 767px) {
+            .gallery-modal-img { height: 220px; max-width: 98vw; }
+        }
     </style>
 
     <div class="container-fluid pt-4 px-4">
@@ -50,37 +59,43 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Cover Image -->
             <img src="../../uploads<?php echo $banquet_row['image']; ?>" alt="Cover Image" class="cover-img">
 
-            <table class="table text-start align-middle border table-hover">
-                <tr>
-                    <th>Banquet Name:</th><td><?php echo $banquet_row["name"]; ?></td>
-                    <th>Owner Name:</th><td><?php echo $banquet_row["owner_name"]; ?></td>
-                    <th>Email:</th><td><?php echo $banquet_row["owner_email"]; ?></td>
-                </tr>
-                <tr>
-                    <th>Phone:</th><td><?php echo $banquet_row["owner_phone"]; ?></td>
-                    <th>Registration Date:</th><td><?php echo $banquet_row["created_at"]; ?></td>
-                    <th>Location:</th><td><?php echo $banquet_row["location"]; ?></td>
-                </tr>
-                <tr>
-                    <th>Capacity:</th><td><?php echo $banquet_row["capacity"]; ?></td>
-                    <th>Price:</th><td><?php echo $banquet_row["price"]; ?></td>
-                    <th>Status:</th><td><?php echo $banquet_row["status"]; ?></td>
-                </tr>
-            </table>
+            <!-- Banquet Info Table -->
+            <div class="table-responsive mb-3">
+                <table class="table text-start align-middle border table-hover">
+                    <tr>
+                        <th>Banquet Name:</th><td><?php echo $banquet_row["name"]; ?></td>
+                        <th>Owner Name:</th><td><?php echo $banquet_row["owner_name"]; ?></td>
+                        <th>Email:</th><td><?php echo $banquet_row["owner_email"]; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Phone:</th><td><?php echo $banquet_row["owner_phone"]; ?></td>
+                        <th>Registration Date:</th><td><?php echo $banquet_row["created_at"]; ?></td>
+                        <th>Location:</th><td><?php echo $banquet_row["location"]; ?></td>
+                    </tr>
+                    <tr>
+                        <th>Capacity:</th><td><?php echo $banquet_row["capacity"]; ?></td>
+                        <th>Price:</th><td><?php echo $banquet_row["price"]; ?></td>
+                        <th>Status:</th><td><?php echo $banquet_row["status"]; ?></td>
+                    </tr>
+                </table>
+            </div>
 
-            <table class="table text-start align-middle border table-hover">
-                <tr>
-                    <th>Description:</th>
-                    <td><?php echo $banquet_row["description"]; ?></td>
-                </tr>
-            </table>
+            <!-- Description Table -->
+            <div class="table-responsive mb-3">
+                <table class="table text-start align-middle border table-hover">
+                    <tr>
+                        <th>Description:</th>
+                        <td><?php echo $banquet_row["description"]; ?></td>
+                    </tr>
+                </table>
+            </div>
 
-            <!-- Image Gallery -->
-            <div class="row mt-5">
+            <!-- Gallery Images Section -->
+            <div class="row mt-5 g-3">
                 <h5 class="text-start mb-3">Gallery Images</h5>
                 <?php foreach ($gallery_images as $index => $image): ?>
-                    <div class="col-md-2 ">
-                        <img src="../../uploads<?php echo $image['image']; ?>" class="gallery-thumb"
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2 d-flex justify-content-center">
+                        <img src="../../uploads/<?php echo $image['image']; ?>" class="gallery-thumb"
                              data-bs-toggle="modal" data-bs-target="#galleryModal"
                              data-bs-slide-to="<?php echo $index; ?>">
                     </div>
@@ -132,7 +147,7 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="carousel-inner">
                                     <?php foreach ($gallery_images as $i => $image): ?>
                                         <div class="carousel-item <?php echo $i == 0 ? 'active' : ''; ?>">
-                                            <img src="../../uploads<?php echo $image['image']; ?>" class="d-block w-100" style="max-height: 600px; object-fit: contain;">
+                                            <img src="../../uploads/<?php echo $image['image']; ?>" class="d-block w-100 gallery-modal-img">
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
