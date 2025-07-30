@@ -44,6 +44,11 @@ $owner_img = !empty($owner['owner_image']) ? '../../uploads/' . $owner['owner_im
                                 <i class="bi bi-building-fill-gear me-2" style="color:#DAA520;"></i>Manage Banquet
                             </a>
                         </div>
+                        
+                        
+                        <a href="add_banquet.php" class="dropdown-item ps-5" style="color:#800000;">
+                            <i class="bi bi-calendar-check-fill"  style="color:#DAA520;"></i>Bookings
+                        </a>
                     </div>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-weight:500;">
