@@ -46,10 +46,24 @@ $owner_img = !empty($owner['owner_image']) ? '../../uploads/' . $owner['owner_im
                         </div>
                         
                         
-                        <a href="add_banquet.php" class="dropdown-item ps-5" style="color:#800000;">
-                            <i class="bi bi-calendar-check-fill"  style="color:#DAA520;"></i>Bookings
-                        </a>
                     </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-weight:500;">
+                            <i class="bi bi-calendar-check-fill"  style="color:#DAA520;"></i>
+                            <span style="color:#800000;">Bookings</span>
+                        </a>
+                        <div class="dropdown-menu bg-white border-0  rounded-3 py-2">
+                            <a href="bookings.php" class="dropdown-item ps-5" style="color:#800000;">
+                                <i class="bi bi-building-add me-2" style="color:#DAA520;"></i>Booking 
+                            </a>
+                            <a href="canceled_bookings.php?id=<?php echo $_SESSION['owner_id']; ?>" class="dropdown-item ps-5" style="color:#800000;">
+                                <i class="bi bi-building-fill-gear me-2" style="color:#DAA520;"></i>canceled Booking
+                            </a>
+                        </div>
+                        
+                        
+                    </div>
+                    
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" style="font-weight:500;">
                             <i class="far fa-file-alt me-2" style="color:#DAA520;"></i>
