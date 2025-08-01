@@ -4,6 +4,14 @@ include 'db.php';
 include 'includes/header.php';
 $page ="home";
 include 'includes/navbar.php';
+$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+if ($search !== '') {
+    $stmt = $pdo->prepare("SELECT * FROM banquets WHERE name LIKE :search OR location LIKE :search");
+    $stmt->execute(['search' => "%$search%"]);
+} else {
+    $stmt = $pdo->query("SELECT * FROM banquets LIMIT 6");
+}
+
 ?>
 
 <!-- Hero Carousel -->
@@ -85,58 +93,46 @@ include 'includes/navbar.php';
 </section>
 <!-- section-3 -->
  <!--  TOP BANQUETS-->
-<section class="py-5">
-  <div class="container">
-    <div class="text-center mb-5">
-      <h2 class="fw-bold">Top Rated Banquets</h2>
-      <p class="text-muted">Discover the most popular venues this week</p>
-    </div>
+<section id="banquet-list" class="py-5 bg-light sec-2">
+    <div class="container">
+        <div class="row g-4">
+            <?php while($banquet_row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
-    <div class="row g-4">
-      <!-- Card 1 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <img src="uploads/banquets/hall1.jpg" class="card-img-top" alt="Banquet 1">
-          <div class="card-body">
-            <h5 class="card-title">Grand Palace Banquet</h5>
-            <p class="card-text"><i class="fa fa-map-marker-alt"></i> Clifton, Karachi</p>
-            <p class="text-muted">Capacity: 500 | Rs. 150,000</p>
-            <a href="#" class="btn btn-outline-warning">View Details</a>
-          </div>
+              ?>
+            <!-- Card Container -->
+            <div class="col-md-4 mb-4">
+                <div class="card banquet-card shadow-sm border-0 rounded-4 overflow-hidden">
+
+                    <!-- Image -->
+                    <img src="uploads<?php echo $banquet_row['image']; ?>" class="card-img-top"
+                        style="height: 180px; object-fit: cover;" alt="Banquet Image">
+
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <h5 class="fw-semibold mb-1">
+                            <?php echo $banquet_row["name"] . " | " . $banquet_row["location"]; ?><span> | Banquet
+                            </span></h5>
+
+                        <p class="card-text mb-2">Starting From Rs. <?php echo $banquet_row["price"]; ?></p>
+
+                        <p><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"><i
+                                    class="fa-solid fa-star"></i></i><i class="fa-solid fa-star"></i><i
+                                class="fa-solid fa-star"></i><span></space>
+                        </p>
+                        <!-- Button -->
+                        <a href="users/booking_page.php?id=<?php echo $banquet_row['id']; ?>"
+                            class="btn btn-sm btn-dark w-100 rounded-pill">
+                            View Details
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <?php }?>
         </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <img src="uploads/banquets/hall2.jpg" class="card-img-top" alt="Banquet 2">
-          <div class="card-body">
-            <h5 class="card-title">The Elegant Hall</h5>
-            <p class="card-text"><i class="fa fa-map-marker-alt"></i> Gulshan-e-Iqbal</p>
-            <p class="text-muted">Capacity: 300 | Rs. 90,000</p>
-            <a href="#" class="btn btn-outline-warning">View Details</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="col-md-4">
-        <div class="card shadow-sm">
-          <img src="uploads/banquets/hall3.jpg" class="card-img-top" alt="Banquet 3">
-          <div class="card-body">
-            <h5 class="card-title">Royal Orchid Venue</h5>
-            <p class="card-text"><i class="fa fa-map-marker-alt"></i> DHA Phase 6</p>
-            <p class="text-muted">Capacity: 700 | Rs. 200,000</p>
-            <a href="#" class="btn btn-outline-warning">View Details</a>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <div class="text-center mt-4">
-      <a href="banquet_list.php" class="btn btn-warning px-4">Explore All Banquets</a>
-    </div>
-  </div>
 </section>
 
 <!-- section 4 -->

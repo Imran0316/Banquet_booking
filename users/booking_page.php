@@ -1,7 +1,7 @@
 <?php
 session_start();
 include("../db.php");
-include("../includes/header.php");
+include("include/header.php");
 $banquet_id = $_GET["id"];
 $user_id = $_SESSION['id'];
 $page = "inner";
@@ -14,7 +14,7 @@ $stmt = $pdo->prepare("SELECT * FROM `banquets` WHERE id = ?");
 $stmt->execute([$banquet_id]);
 $banquet_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$stmt2 = $pdo->prepare("SELECT * FROM `banquet_images` WHERE banquet_id = ?");
+$stmt2 = $pdo->prepare("SELECT * FROM `banquet_images` WHERE banquet_id = ? Limit 3");
 $stmt2->execute([$banquet_id]);
 $galleries = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
@@ -123,7 +123,7 @@ form button[type="submit"] {
 <!-- Content Start -->
 <div class="content">
     <?php
-    include("../includes/navbar.php");
+    include("include/navbar.php");
 
     ?>
     <div class="container my-4">
@@ -264,21 +264,8 @@ form button[type="submit"] {
                     <option value="Evening (7 PM - 11 PM)">Evening (7 PM - 11 PM)</option>
                 </select>
 
-                <label class="form-label">Number of Guests</label>
-                <input type="number" name="guests" class="form-control" min="50" required>
-
-                <label class="form-label">Event Type</label>
-                <select name="event_type" class="form-select" required>
-                    <option value="">-- Select Event --</option>
-                    <option>Wedding</option>
-                    <option>Birthday</option>
-                    <option>Corporate</option>
-                    <option>Other</option>
-                </select>
-
-                <button class="btn  w-100 mt-4" name="submit_booking" type="submit"
-                    style="background-color: maroon; color: white;">Confirm
-                    Booking</button>
+                <button class="btn  w-100 mt-4" name="booking_detail.php" type="submit"
+                    style="background-color: maroon; color: white;">Book Now!</button>
             </form>
         </div>
 

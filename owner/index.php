@@ -4,7 +4,7 @@ include '../db.php';
 include '../includes/header.php';
 
 if(isset($_GET['registered']) && $_GET['registered'] == 1) {
-    echo "<div class='alert alert-success text-center fw-bold' style='background:linear-gradient(90deg,#fffbe6,#fff5f5);color:#800000;border:2px solid #DAA520;'>Registration successful!<br>Your account is pending approval. You will be notified once it's approved.</div>";
+    echo "<div class='alert alert-success text-center fw-bold' style='background:linear-gradient(90deg,#fffbe6,#fff5f5);color:#800000;border:2px solid #DAA520;'>Registration successful!</div>";
 }
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["login"])){
     $email = $_POST["email"];

@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
             }
 
             $_SESSION['success'] = "Banquet & Gallery Images uploaded successfully.";
-            header("Location: add_banquet.php");
+            // header("Location: add_banquet.php");
             exit();
 
         } else {
