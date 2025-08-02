@@ -25,27 +25,9 @@ if ($search !== '') {
     font-family: 'Poppins', sans-serif;
 }
 
-.navbar {
-    background-color: maroon !important;
-}
-
-.navbar-brand {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 1.4rem;
-    color: gold;
-
-}
 
 
-.nav-link {
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    color: #fff !important;
-}
 
-.navbar .navbar-nav .nav-item .nav-link:hover {
-    color: gold !important;
-}
 
 .hero-section {
     height: 250px;

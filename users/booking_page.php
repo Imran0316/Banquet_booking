@@ -249,7 +249,7 @@ form button[type="submit"] {
                 </div>
             </div>
 
-            <form action="submit_booking.php?id=<?php echo $banquet_id ?>" method="POST">
+            <form action="booking_detail.php?id=<?php echo $banquet_id ?>" method="POST">
                 <label class="form-label">Event Date</label>
 
                 <input type="hidden" name="banquetID" value="<?php echo $banquet_id ?>" class="form-control">
@@ -264,7 +264,7 @@ form button[type="submit"] {
                     <option value="Evening (7 PM - 11 PM)">Evening (7 PM - 11 PM)</option>
                 </select>
 
-                <button class="btn  w-100 mt-4" name="booking_detail.php" type="submit"
+                <button class="btn  w-100 mt-4" name="booking_detail" type="submit"
                     style="background-color: maroon; color: white;">Book Now!</button>
             </form>
         </div>

@@ -19,6 +19,12 @@ $stmt = $pdo->query("
 
 $stmt->execute();
 $banquets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$stmt=$pdo->query("SELECT COUNT(*) AS total FROM banquet_owner");
+$owner_count = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$stmt=$pdo->query("SELECT COUNT(*) AS total FROM banquets");
+$banquet_count = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
 
@@ -51,8 +57,8 @@ include("include/navbar.php");
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                     <i class="fa fa-chart-bar fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Total Sale</p>
-                        <h6 class="mb-0"></h6>
+                        <p class="mb-2">Banquet Owners</p>
+                        <h6 class="mb-0 fs-2"><?php echo $owner_count["total"]; ?></h6>
                     </div>
                 </div>
             </div>
@@ -60,8 +66,8 @@ include("include/navbar.php");
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                     <i class="fa fa-chart-area fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Today Revenue</p>
-                        <h6 class="mb-0"></h6>
+                        <p class="mb-2 ">Total banquets</p>
+                        <h6 class="mb-0 fs-2"><?php echo $banquet_count["total"]; ?></h6>
                     </div>
                 </div>
             </div>
@@ -69,7 +75,7 @@ include("include/navbar.php");
                 <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
                     <i class="fa fa-chart-pie fa-3x text-primary"></i>
                     <div class="ms-3">
-                        <p class="mb-2">Total Revenue</p>
+                        <p class="mb-2">Total Banquets</p>
                         <h6 class="mb-0"></h6>
                     </div>
                 </div>
