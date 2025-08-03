@@ -68,7 +68,7 @@ include 'header.php';
                         <a class="nav-link" href="../banquet_booking/users/login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.php">Register</a>
+                        <a class="nav-link" href="users/register.php">Register</a>
                     </li>
                     <?php endif; ?>
                 </ul>

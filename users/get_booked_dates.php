@@ -1,11 +1,19 @@
 <?php
+header('Content-Type: application/json');
 include("../db.php");
+
+$banquet_id = $_GET["id"];
+if (!$banquet_id) {
+    echo json_encode(["error" => "Missing ID"]);
+    exit;
+}
+
 $banquet_id = $_GET["id"];
 $stmt = $pdo->query("SELECT date, time_slot FROM bookings WHERE banquet_id = $banquet_id");
 $slotCounts = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $date = $row['date'];
+    $date = date("Y-m-d", strtotime($row['date'])); // ✅ Proper format for flatpickr
     if (!isset($slotCounts[$date])) {
         $slotCounts[$date] = [];
     }
@@ -28,5 +36,3 @@ echo json_encode([
     "partiallyBooked" => $partiallyBooked
 ]);
 ?>
-
-

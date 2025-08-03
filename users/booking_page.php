@@ -236,7 +236,7 @@ form button[type="submit"] {
                 </blockquote>
             </div>
 
-            
+
         </div>
 
         <!-- Right: Booking Widget -->
@@ -249,7 +249,7 @@ form button[type="submit"] {
                 </div>
             </div>
 
-            <form action="booking_detail.php?id=<?php echo $banquet_id ?>" method="POST">
+            <form action="checkout.php?id=<?php echo $banquet_id ?>" method="POST">
                 <label class="form-label">Event Date</label>
 
                 <input type="hidden" name="banquetID" value="<?php echo $banquet_id ?>" class="form-control">
@@ -275,11 +275,14 @@ form button[type="submit"] {
     include("../includes/footer.php");
     ?>
 
-    <script>
+       <script>
     $(document).ready(function() {
         $.getJSON("get_booked_dates.php?id=<?php echo $banquet_id ?>", function(data) {
             const fullyBooked = data.fullyBooked;
             const partiallyBooked = data.partiallyBooked;
+
+            console.log("Fully Booked: ", fullyBooked);
+
 
             flatpickr("#myDatePicker", {
                 minDate: "today",
@@ -335,6 +338,8 @@ form button[type="submit"] {
         });
     });
     </script>
+
+ 
     <script>
     function changeImage(thumb) {
         document.getElementById("mainImage").src = thumb.src;
