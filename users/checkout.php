@@ -5,10 +5,12 @@ include("include/header.php");
 $page = "inner";
 include("include/navbar.php");
 
+$date_selected = isset($_GET['event_date']) ? $_GET['event_date'] : date('Y-m-d');
+$time_selected = isset($_GET['time_slot']) ? $_GET['time_slot'] : '00:00';
 
 // Fetch banquet details from the database
 $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if no ID is provided
-$query = "SELECT * FROM banquets WHERE id = $banquet_id";
+
 ?>
 
 
@@ -216,18 +218,16 @@ $query = "SELECT * FROM banquets WHERE id = $banquet_id";
             <form>
                 <div class="mb-3">
                     <label class="form-label">Select Date</label>
-                    <input type="date" class="form-control border-0 border-bottom rounded-0" required>
+                    <input type="text" id="myDatePicker" class="form-control border-0 border-bottom rounded-0" required>
                 </div>
 
                 <div class="row mb-3">
-                    <div class="col">
-                        <label class="form-label">Start Time</label>
-                        <input type="time" class="form-control border-0 border-bottom rounded-0" required>
-                    </div>
-                    <div class="col">
-                        <label class="form-label">End Time</label>
-                        <input type="time" class="form-control border-0 border-bottom rounded-0" required>
-                    </div>
+                    <label class="form-label">Time Slot</label>
+                    <select name="time_slot" id="timeSlot" class="form-select" required>
+                        <option value="">-- Select Time --</option>
+                        <option value="Morning (10 AM - 2 PM)">Morning (10 AM - 2 PM)</option>
+                        <option value="Evening (7 PM - 11 PM)">Evening (7 PM - 11 PM)</option>
+                    </select>
                 </div>
 
                 <div class="d-flex justify-content-between mb-2">
@@ -255,6 +255,9 @@ $query = "SELECT * FROM banquets WHERE id = $banquet_id";
 
     </div>
 </div>
+
+
+
 <script>
 function toggleStep(stepNumber) {
     const step1 = document.getElementById('step1');
@@ -279,29 +282,97 @@ function enableStep2() {
 
 
 <script>
-    function handlePaymentMethod(method) {
-        const cardFields = document.querySelectorAll('.card-fields');
-        const mobileFields = document.getElementById('mobileFields');
+function handlePaymentMethod(method) {
+    const cardFields = document.querySelectorAll('.card-fields');
+    const mobileFields = document.getElementById('mobileFields');
 
-        if (method === 'easypaisa' || method === 'jazzcash') {
-            cardFields.forEach(field => field.style.display = 'none');
-            mobileFields.style.display = 'flex';
-        } else if (method === 'card') {
-            cardFields.forEach(field => field.style.display = 'block');
-            mobileFields.style.display = 'none';
-        } else {
-            // Reset
-            cardFields.forEach(field => field.style.display = 'none');
-            mobileFields.style.display = 'none';
-        }
+    if (method === 'easypaisa' || method === 'jazzcash') {
+        cardFields.forEach(field => field.style.display = 'none');
+        mobileFields.style.display = 'flex';
+    } else if (method === 'card') {
+        cardFields.forEach(field => field.style.display = 'block');
+        mobileFields.style.display = 'none';
+    } else {
+        // Reset
+        cardFields.forEach(field => field.style.display = 'none');
+        mobileFields.style.display = 'none';
     }
+}
 
-    // By default hide card fields
-    document.addEventListener('DOMContentLoaded', () => {
-        handlePaymentMethod('');
-    });
+// By default hide card fields
+document.addEventListener('DOMContentLoaded', () => {
+    handlePaymentMethod('');
+});
+</script>
+<script>
+$(document).ready(function() {
+    $.getJSON(
+        "get_booked_dates.php?id=<?php echo $banquet_id ?>",
+        function(data) {
+            const fullyBooked = data.fullyBooked;
+            const partiallyBooked = data.partiallyBooked;
+
+            console.log("Fully Booked: ", fullyBooked);
+
+            flatpickr("#myDatePicker", {
+                minDate: "today",
+                maxDate: new Date().fp_incr(365), // Allow booking up to
+                dateFormat: "Y-m-d",
+                disable: fullyBooked,
+                onDayCreate: function(dObj, dStr, fp, dayElem) {
+                    const date = dayElem.dateObj;
+                    // const ymd = date.toISOString().slice(0, 10);
+                    const ymd = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                    if (fullyBooked.includes(ymd)) {
+                        dayElem.classList.add("fully-booked");
+                    } else if (partiallyBooked.includes(ymd)) {
+                        dayElem.classList.add("partially-booked");
+                    }
+                },
+                onChange: function(selectedDates, dateStr) {
+                    $.getJSON(
+                        "get_booked_slots.php", {
+                            date: dateStr,
+                        },
+                        function(bookedSlots) {
+                            const slotMap = {
+                                "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
+                                "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)",
+                            };
+
+                            $("#timeSlot option").each(function() {
+                                const originalText = $(this).data("original-text");
+                                if (originalText) {
+                                    $(this).text(originalText);
+                                }
+                                $(this).prop("disabled", false);
+                            });
+
+                            bookedSlots.forEach(function(slotLabel) {
+                                const slotValue = slotMap[slotLabel];
+                                const $option = $(
+                                    "#timeSlot option[value='" + slotValue +
+                                    "']"
+                                );
+                                if ($option.length) {
+                                    if (!$option.data("original-text")) {
+                                        $option.data("original-text", $option
+                                        .text());
+                                    }
+                                    $option.text($option.text() + " (Booked)");
+                                    $option.prop("disabled", true);
+                                }
+                            });
+
+                            $("#timeSlot").val("");
+                        }
+                    );
+                },
+            });
+        }
+    );
+});
 </script>
 <?php 
 include("../includes/footer.php");
-
 ?>

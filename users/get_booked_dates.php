@@ -23,6 +23,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 $fullyBooked = [];
 $partiallyBooked = [];
 
+
+   
 foreach ($slotCounts as $date => $slots) {
     if (in_array("Morning (10 AM - 2 PM)", $slots) && in_array("Evening (7 PM - 11 PM)", $slots)) {
         $fullyBooked[] = $date;
