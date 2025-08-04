@@ -14,11 +14,14 @@ include("include/sidebar.php");
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <h4 class="mb-0 fw-bold" style="color:#800000;font-family:'Playfair Display',serif;">Manage Banquets
                 </h4>
-                <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addCateringModal">
-                    + Add New Catering
+                <!-- Trigger Button -->
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCateringModal">
+                    Add New Catering
                 </button>
+
+
             </div>
-           
+
 
             <?php
             if (isset($_SESSION['error'])) {
@@ -30,7 +33,7 @@ include("include/sidebar.php");
                 unset($_SESSION['success']);
             }
             ?>
-            <!-- <div class="table-responsive">
+            <div class="table-responsive">
                 <table class="table align-middle table-bordered table-hover mb-0" style="background:#fffbe6;">
                     <thead>
                         <tr style="background:linear-gradient(90deg,#80000022,#DAA52022);color:#800000;">
@@ -46,8 +49,8 @@ include("include/sidebar.php");
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <?php if($banquet_data){?>
-                        <?php foreach ($banquet_data as $banquet_data) { ?> -->
+                        <?php if($banquet_data){?>
+                        <?php foreach ($banquet_data as $banquet_data) { ?>
                         <tr>
 
                             <td><?php echo $sr++; ?></td>
@@ -80,73 +83,74 @@ include("include/sidebar.php");
                 </table>
 
             </div>
-             -->
+
         </div>
+        <!-- Button trigger modal -->
+        <?php include("include/footer.php"); ?>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="addCateringModal" tabindex="-1">
+            <div class="modal-dialog">
+                <form method="POST" action="catering_store.php" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Catering Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Banquet dropdown -->
+                        <div class="mb-3">
+                            <label>Banquet</label>
+                            <select name="banquet_id" class="form-select" required>
+                                <option value="" hidden>Select Banquet</option>
+                                <?php
+                                        $owner_id = $_SESSION['owner_id'];
+                                        $banquets = $pdo->query("SELECT * FROM banquets WHERE owner_id = $owner_id");
+                                        while ($b = $banquets->fetch(PDO::FETCH_ASSOC)):
+                                        ?>
+                                <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['name']) ?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        </div>
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label>Menu Title</label>
+                            <input type="text" name="title" class="form-control" required>
+                        </div>
+
+                        <!-- Price Per Head -->
+                        <div class="mb-3">
+                            <label>Price Per Head (Rs)</label>
+                            <input type="number" name="price_per_head" class="form-control" required>
+                        </div>
+
+                        <!-- Min Guests -->
+                        <div class="mb-3">
+                            <label>Minimum Guests</label>
+                            <input type="number" name="min_guests" class="form-control" required>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="mb-3">
+                            <label>Status</label>
+                            <select name="status" class="form-select">
+                                <option value="active" selected>Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Catering</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="addCateringModal" tabindex="-1">
-       <div class="modal-dialog">
-           <form method="POST" action="catering_store.php" class="modal-content">
-               <div class="modal-header">
-                   <h5 class="modal-title">Add Catering Service</h5>
-                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-               </div>
-               <div class="modal-body">
-                   <!-- Banquet dropdown -->
-                   <div class="mb-3">
-                       <label>Banquet</label>
-                       <select name="banquet_id" class="form-select" required>
-                           <option value="" hidden>Select Banquet</option>
-                           <?php
-                           $banquets = $conn->query("SELECT * FROM banquets WHERE status = 'approved'");
-                           while ($b = $banquets->fetch(PDO::FETCH_ASSOC)):
-                           ?>
-                           <option value="<?= $b['id'] ?>"><?= htmlspecialchars($b['name']) ?></option>
-                           <?php endwhile; ?>
-                       </select>
-                   </div>
-    
-                   <!-- Title -->
-                   <div class="mb-3">
-                       <label>Menu Title</label>
-                       <input type="text" name="title" class="form-control" required>
-                   </div>
-    
-                   <!-- Description -->
-                   <div class="mb-3">
-                       <label>Description</label>
-                       <textarea name="description" class="form-control" rows="3"></textarea>
-                   </div>
-    
-                   <!-- Price Per Head -->
-                   <div class="mb-3">
-                       <label>Price Per Head (Rs)</label>
-                       <input type="number" name="price_per_head" class="form-control" required>
-                   </div>
-    
-                   <!-- Min Guests -->
-                   <div class="mb-3">
-                       <label>Minimum Guests</label>
-                       <input type="number" name="min_guests" class="form-control" required>
-                   </div>
-    
-                   <!-- Status -->
-                   <div class="mb-3">
-                       <label>Status</label>
-                       <select name="status" class="form-select">
-                           <option value="active" selected>Active</option>
-                           <option value="inactive">Inactive</option>
-                       </select>
-                   </div>
-               </div>
-               <div class="modal-footer">
-                   <button type="submit" class="btn btn-success">Save Catering</button>
-                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-               </div>
-           </form>
-       </div>
-    </div>
-    <?php include("include/footer.php"); ?>
+
 </div>
 
 <style>

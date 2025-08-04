@@ -74,7 +74,7 @@ $owner_img = !empty($owner['owner_image']) ? '../../uploads/' . $owner['owner_im
                     <span style="color:#800000;">Catering</span>
                 </a>
                 <div class="dropdown-menu bg-white border-0  rounded-3 py-2">
-                    <a href="../catering_list.php" class="dropdown-item ps-5" style="color:#800000;">
+                    <a href="catering_list.php" class="dropdown-item ps-5" style="color:#800000;">
                         <i class="fa-solid fa-eye me-2" style="color:#DAA520;"></i>
                         <span style="color:#800000;">View All</span>
 
