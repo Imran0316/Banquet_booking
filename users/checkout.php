@@ -9,7 +9,26 @@ $date_selected = isset($_GET['event_date']) ? $_GET['event_date'] : date('Y-m-d'
 $time_selected = isset($_GET['time_slot']) ? $_GET['time_slot'] : '00:00';
 
 // Fetch banquet details from the database
-$banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if no ID is provided
+$banquet_id = isset($_GET['banquetID']) ? intval($_GET['banquetID']) : 1; // Default to 1 if no ID is provided
+
+//User Signup
+if (isset($_POST['user_signup'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // Insert user into the database
+    $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$name, $email, $phone, $password])) {
+        $_SESSION['id'] = $pdo->lastInsertId(); // Store user ID in session
+        // header("Location: checkout.php?id=$banquet_id&event_date=$date_selected&time_slot=$time_selected");
+        exit();
+    } else {
+        echo "<script>alert('Error signing up. Please try again.');</script>";
+    }
+}
+$is_logged_in = isset($_SESSION['id']) && !empty($_SESSION['id']);
 
 ?>
 
@@ -95,26 +114,151 @@ $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if n
 
 <div class="container py-5 d-flex  align-items-start justify-content-equal">
     <div class="left_section col-8 ">
+        <?php if(!$is_logged_in) {?>
         <!-- Step 1 -->
         <div class="step active " id="step1">
             <div class="step-header" onclick="toggleStep(1)"><span
                     class="border border-1  rounded-circle border-dark px-1 me-2"> 1 </span> Personal Information</div>
-            <form id="projectForm " class="step-content px-5">
+            <form action="" method="POST" id="projectForm " class="step-content px-5">
                 <div class="row">
                     <div class="form-group col-md-6 mb-3">
                         <label for="address">Full Name:</label>
-                        <input type="text" class="form-control" id="address" placeholder="Full Name" required>
+                        <input type="text" name="name" class="form-control" id="address" placeholder="Full Name" required>
                     </div>
                     <div class="form-group col-md-6 mb-3">
                         <label for="address">Email:</label>
-                        <input type="email" class="form-control" id="email" placeholder="Email" required>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
                     </div>
                     <div class="form-group col-md-6 mb-3">
                         <label for="address">Phone:</label>
-                        <input type="text" class="form-control" id="phone" placeholder="e.g 03123456789" required>
+                        <input type="text" class="form-control" name="phone" id="phone" placeholder="e.g 03123456789" required>
                     </div>
                     <div class="form-group col-md-6 mb-3">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" name="password" id="password" name="password" placeholder="" required>
+                    </div>
+
+                    <div class="col-12">
+                  <input type="submit" value="Next" class="btn btn-primary" onclick="enableStep2()" name="user_signup" value="
+                        "> <br>
+                        <small>Already have an account? <a href="#">Login</a></small>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+            <div class="step-header disabled" id="step2-header" onclick="toggleStep(2)"><span
+                    class="border border-1  rounded-circle border-dark px-1 me-2"> 2 </span> Event Information</div>
+            <form id="projectForm " class="step-content px-5">
+                <div class="row">
+                    
+                    <div class="form-group col-12 mb-3">
+                        <label for="notes">Extra Notes</label>
+                       <textarea name="notes" id="" placeholder="e.g light decoration" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group col-12 mb-3">
                         <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" placeholder="e.g. 123 Street, DHA, Karachi"
+                            required>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="button" class="btn btn-primary" onclick="enableStep3()">Next</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <!-- Step 3 -->
+        <div class="step" id="step3">
+            <div class="step-header disabled" id="step3-header" onclick="toggleStep(3)"><span
+                    class="border border-1  rounded-circle border-dark px-1 me-2"> 2 </span> Pay for location</div>
+            <form id="paymentForm" class="step-content px-5">
+                <div class="row">
+                    <!-- Pay With -->
+                    <div class="form-group col-md-6 mb-3">
+                        <label for="paymentMethod">Pay with:</label>
+                        <select class="form-select" id="paymentMethod" required
+                            onchange="handlePaymentMethod(this.value)">
+                            <option value="">Select payment method</option>
+                            <option value="card">Credit or Debit Card</option>
+                            <option value="jazzcash">JazzCash</option>
+                            <option value="easypaisa">EasyPaisa</option>
+                        </select>
+                    </div>
+
+                    <!-- Card Number -->
+                    <div class="form-group col-md-6 mb-3 card-fields">
+                        <label for="cardNumber">Card Number:</label>
+                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456">
+                    </div>
+
+                    <!-- Expiry -->
+                    <div class="form-group col-md-6 mb-3 card-fields">
+                        <label for="expiry">Expiration Date:</label>
+                        <input type="date" class="form-control" id="expiry" placeholder="MM / YY">
+                    </div>
+
+                    <!-- CVC -->
+                    <div class="form-group col-md-6 mb-3 card-fields">
+                        <label for="cvc">Security Code:</label>
+                        <input type="text" class="form-control" id="cvc" placeholder="CVC">
+                    </div>
+
+                    <!-- Country -->
+                    <div class="form-group col-md-6 mb-3 card-fields">
+                        <label for="country">Country:</label>
+                        <select class="form-select" id="country">
+                            <option value="Pakistan" selected>Pakistan</option>
+                            <option value="India">India</option>
+                            <option value="UAE">UAE</option>
+                        </select>
+                    </div>
+
+                    <!-- Name on Card -->
+                    <div class="form-group col-md-6 mb-3 card-fields">
+                        <label for="nameOnCard">Name on Card:</label>
+                        <input type="text" class="form-control" id="nameOnCard" placeholder="Full name">
+                    </div>
+
+                    <!-- JazzCash / EasyPaisa Fields -->
+                    <div id="mobileFields" style="display: none;">
+                        <div class="form-group col-md-6 mb-3 me-2">
+                            <label for="payerName">Your Name:</label>
+                            <input type="text" class="form-control" id="payerName" placeholder="e.g. Ali Khan">
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="payerNumber">Mobile Number:</label>
+                            <input type="text" class="form-control" id="payerNumber" placeholder="e.g. 03XXXXXXXXX">
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">Pay Now</button>
+                    </div>
+                </div>
+            </form>
+
+
+
+        </div>
+        <?php } else { ?>
+        <!-- Step 1 -->
+        <div class="step active " id="step1">
+            <div class="step-header" onclick="toggleStep(1)"><span
+                    class="border border-1  rounded-circle border-dark px-1 me-2"> 1 </span> Event Information</div>
+            <form id="projectForm " class="step-content px-5">
+                <div class="row">
+                    
+                    <div class="form-group col-12 mb-3">
+                        <label for="notes">Extra Notes <span  style="font-size: 12px; font-weight: 100;">(optional)</span></label> 
+                       <textarea name="notes" id="" placeholder="e.g light decoration" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group col-12 mb-3">
+                        <label for="address">Address <span class="text-danger" >*</span></label>
                         <input type="text" class="form-control" id="address" placeholder="e.g. 123 Street, DHA, Karachi"
                             required>
                     </div>
@@ -126,7 +270,6 @@ $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if n
             </form>
 
         </div>
-
         <!-- Step 2 -->
         <div class="step" id="step2">
             <div class="step-header disabled" id="step2-header" onclick="toggleStep(2)"><span
@@ -201,7 +344,7 @@ $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if n
 
 
         </div>
-
+        <?php } ?>
     </div>
     <div class="right_section col-4 ">
         <div class="card shadow-sm p-4 border rounded-4">
@@ -218,7 +361,8 @@ $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if n
             <form>
                 <div class="mb-3">
                     <label class="form-label">Select Date</label>
-                    <input type="text" id="myDatePicker" class="form-control border-0 border-bottom rounded-0" required>
+                    <input type="text" id="myDatePicker" value="<?php echo $date_selected ?>"
+                        class="form-control border-0 border-bottom rounded-0" required>
                 </div>
 
                 <div class="row mb-3">
@@ -257,12 +401,16 @@ $banquet_id = isset($_GET['id']) ? intval($_GET['id']) : 1; // Default to 1 if n
 </div>
 
 
-
+<?php 
+include("../includes/footer.php");
+?>
 <script>
 function toggleStep(stepNumber) {
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
     const step2Header = document.getElementById('step2-header');
+    const step3Header = document.getElementById('step3-header');
 
     if (stepNumber === 1) {
         step1.classList.add('active');
@@ -270,6 +418,9 @@ function toggleStep(stepNumber) {
     } else if (stepNumber === 2 && !step2Header.classList.contains('disabled')) {
         step2.classList.add('active');
         step1.classList.remove('active');
+    }else if (stepNumber === 3 && !step3Header.classList.contains('disabled')) {
+        step3.classList.add('active');
+        step2.classList.remove('active');
     }
 }
 
@@ -277,6 +428,11 @@ function enableStep2() {
     const step2Header = document.getElementById('step2-header');
     step2Header.classList.remove('disabled');
     toggleStep(2);
+}
+function enableStep3() {
+    const step3Header = document.getElementById('step3-header');
+    step3Header.classList.remove('disabled');
+    toggleStep(3);
 }
 </script>
 
@@ -357,7 +513,7 @@ $(document).ready(function() {
                                 if ($option.length) {
                                     if (!$option.data("original-text")) {
                                         $option.data("original-text", $option
-                                        .text());
+                                            .text());
                                     }
                                     $option.text($option.text() + " (Booked)");
                                     $option.prop("disabled", true);
@@ -373,6 +529,16 @@ $(document).ready(function() {
     );
 });
 </script>
-<?php 
-include("../includes/footer.php");
-?>
+<style>
+.flatpickr-day.partially-booked {
+    border-bottom: 2px solid #ff9800 !important;
+    background: #fffbe6;
+}
+
+.flatpickr-day.fully-booked {
+    border-bottom: 2px solid #e53935 !important;
+    /* Red underline */
+    background: #ffeaea;
+    color: #b71c1c;
+}
+</style>

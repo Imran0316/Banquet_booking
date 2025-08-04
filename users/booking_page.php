@@ -3,13 +3,13 @@ session_start();
 include("../db.php");
 include("include/header.php");
 $banquet_id = $_GET["id"];
-$user_id = $_SESSION['id'];
+// $user_id = $_SESSION['id'];
 $page = "inner";
-if(!isset($user_id) || empty($user_id)) {
-    header("Location: login.php");
-    exit();
+// if(!isset($user_id) || empty($user_id)) {
+//     header("Location: login.php");
+//     exit();
 
-}
+// }
 $stmt = $pdo->prepare("SELECT * FROM `banquets` WHERE id = ?");
 $stmt->execute([$banquet_id]);
 $banquet_data = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -249,12 +249,12 @@ form button[type="submit"] {
                 </div>
             </div>
 
-            <form action="checkout.php?id=<?php echo $banquet_id ?>" method="GET">
+            <form action="checkout.php" method="GET">
                 <label class="form-label">Event Date</label>
 
                 <input type="hidden" name="banquetID" value="<?php echo $banquet_id ?>" class="form-control">
 
-                <input type="hidden" name="userID" value="<?php echo $user_id ?>" class="form-control">
+                <!-- <input type="hidden" name="userID" value="<?php echo $user_id ?>" class="form-control"> -->
                 <input type="text" name="event_date" id="myDatePicker" class="form-control" placeholder="Select date">
 
                 <label class="form-label">Time Slot</label>
