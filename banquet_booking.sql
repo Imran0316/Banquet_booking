@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2025 at 05:27 AM
+-- Generation Time: Aug 05, 2025 at 07:44 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -58,9 +58,8 @@ CREATE TABLE `banquets` (
 --
 
 INSERT INTO `banquets` (`id`, `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`, `Remarks`, `status`) VALUES
-(11, 4, 'marquee', 'north nazimabad karachi', 300, 120000.00, 'Marquee Banquet is an elegant and spacious event venue designed to host a wide range of occasions — from weddings and engagements to corporate events and birthday parties. With a seating capacity of up to 500 guests, modern lighting, air-conditioned halls, and premium décor,', '../../uploads/1752258039_arne-hellin-mhZBBx3BIwc-unsplash (1).jpg', '2025-07-11 18:20:39', 'waiting for approval', 'pending'),
-(12, 3, 'Royal Grand Banquet', 'clifton phase 6', 600, 220000.00, 'Royal Grand Banquet is an elegant and spacious event venue designed to host a wide range of occasions — from weddings and engagements to corporate events and birthday parties. With a seating capacity of up to 500 guests, modern lighting, air-conditioned halls, and premium décor, this banquet ensures a luxurious and memorable experience for you and your guests.', '../../uploads/1752258222_thomas-william-OAVqa8hQvWI-unsplash (1).jpg', '2025-07-11 18:23:42', 'waiting for approval', 'pending'),
-(13, 5, 'Concord', 'sakhi hassan north nazimabad', 400, 150000.00, 'Concord Banquet redefines elegance and hospitality for your most cherished moments. Whether it\'s a grand wedding, corporate gala, or festive celebration, our spacious hall, ambient lighting, and contemporary décor create the perfect atmosphere. With a guest capacity of up to 400, in-house catering, and professional event coordination,', '../../uploads/1752258638_soulseeker-creative-photography-nX5Xfn65R6Y-unsplash (1).jpg', '2025-07-11 18:30:38', 'waiting for approval', 'pending');
+(18, 4, 'marquee', 'sharah-e-noor jahan', 400, 75000.00, 'SkyDec Banquet is a modern and elegant event space designed to make your special moments unforgettable. Whether you\'re planning a wedding, birthday, corporate gathering, or a family function, our spacious hall, beautiful décor, and professional staff ensure a flawless experience.\r\n\r\n', '../../uploads/1753589936_library-of-congress-xPes12KkVUg-unsplash-min.jpg', '2025-07-23 15:56:12', 'rejected', 'rejected'),
+(21, 6, 'Concord', 'north nazimabad karachi', 600, 120000.00, 'Concord Banquet is a premium event venue designed to make your special occasions truly unforgettable. Located in a prime area, it offers a perfect blend of elegance and modern amenities. With spacious halls, ambient lighting, and exceptional service, Concord Banquet is ideal for weddings, corporate events, birthdays, and more. ', '../../uploads/1754043462_andra-c-taylor-jr-Qd-lPUtupYA-unsplash (1).jpg', '2025-08-01 10:17:42', 'waiting for approval', 'pending');
 
 -- --------------------------------------------------------
 
@@ -75,6 +74,19 @@ CREATE TABLE `banquet_images` (
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `banquet_images`
+--
+
+INSERT INTO `banquet_images` (`id`, `banquet_id`, `image`, `uploaded_at`) VALUES
+(12, 18, '1753591078_8622_andra-c-taylor-jr-Qd-lPUtupYA-unsplash-min.jpg', '2025-07-27 04:37:58'),
+(13, 18, '1753591078_3586_diogo-nunes-7eCcYQ-zOpc-unsplash-min.jpg', '2025-07-27 04:37:58'),
+(14, 18, '1753591078_8073_quang-nguyen-vinh-pWzgTOpAYKM-unsplash-min.jpg', '2025-07-27 04:37:58'),
+(24, 21, '1754044024_2821_jordan-arnold-Ul07QK2AR-0-unsplash (1).jpg', '2025-08-01 10:27:04'),
+(25, 21, '1754044024_1675_keith-tanner-Cqr7gf5N22E-unsplash (1).jpg', '2025-08-01 10:27:04'),
+(26, 21, '1754044024_6493_andra-c-taylor-jr-Qd-lPUtupYA-unsplash (1).jpg', '2025-08-01 10:27:04'),
+(27, 21, '1754044024_9829_richard-sosa-oPyWP1LrCsg-unsplash (1).jpg', '2025-08-01 10:27:04');
+
 -- --------------------------------------------------------
 
 --
@@ -87,7 +99,8 @@ CREATE TABLE `banquet_owner` (
   `email` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
-  `status` enum('pending','approved','rejected') DEFAULT 'pending',
+  `status` enum('pending','approved','rejected') DEFAULT 'approved',
+  `owner_image` varchar(250) NOT NULL DEFAULT 'owner_img',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -95,10 +108,12 @@ CREATE TABLE `banquet_owner` (
 -- Dumping data for table `banquet_owner`
 --
 
-INSERT INTO `banquet_owner` (`id`, `name`, `email`, `phone`, `password`, `status`, `created_at`) VALUES
-(3, 'saif u rehman', 'saif@gmail.com', '0316323652', '$2y$10$EjwqYuBYgm2G7qVshLInn.yE78qqxtBETLyJ6kfkEDweLUCUDDp0W', 'approved', '2025-07-10 04:52:29'),
-(4, 'umar alam', 'umar@gmail.com', '03452654655', '$2y$10$ZI6rQHYxeAft0942zSufu.7habbydYoBIWA.F.FCldtAYoT1HOjTq', 'approved', '2025-07-10 05:57:41'),
-(5, 'faraz', 'faraz@gmail.com', '03490830516', '$2y$10$pqBqvbwsVxwo6VDzsXxDZ.n/3IXHHowXPGvASJy3KG5d5DXHhG/rm', 'approved', '2025-07-11 18:26:21');
+INSERT INTO `banquet_owner` (`id`, `name`, `email`, `phone`, `password`, `status`, `owner_image`, `created_at`) VALUES
+(3, 'saif u rehman', 'saif@gmail.com', '0316323652', '$2y$10$EjwqYuBYgm2G7qVshLInn.yE78qqxtBETLyJ6kfkEDweLUCUDDp0W', 'rejected', 'owner_img', '2025-07-10 04:52:29'),
+(4, 'umar alam', 'umar@gmail.com', '03452654655', '$2y$10$ZI6rQHYxeAft0942zSufu.7habbydYoBIWA.F.FCldtAYoT1HOjTq', 'approved', 'imran-img2.jpg', '2025-07-10 05:57:41'),
+(5, 'faraz', 'faraz@gmail.com', '03490830516', '$2y$10$pqBqvbwsVxwo6VDzsXxDZ.n/3IXHHowXPGvASJy3KG5d5DXHhG/rm', 'approved', 'imran-img.jpg', '2025-07-11 18:26:21'),
+(6, 'qasim', 'qasim@gmail.com', '1351303212', '$2y$10$vWYBZLoIGoPek2BlehG6MeroOYH9u/At4kP/zuZ9uyWRkhAoooSOq', 'approved', 'owner_img', '2025-07-12 15:32:16'),
+(8, 'anus', 'anus@gmail.com', '0398454654', '$2y$10$uH6HvvLUl31JaCF12GcEy.68pGEOKXnbDJjrpXXVcUixc8b0Tg1HO', 'approved', 'owner_img', '2025-08-01 09:47:52');
 
 -- --------------------------------------------------------
 
@@ -112,10 +127,34 @@ CREATE TABLE `bookings` (
   `banquet_id` int(11) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `time_slot` varchar(50) DEFAULT NULL,
-  `guests` int(11) DEFAULT NULL,
   `event_type` varchar(100) DEFAULT NULL,
   `status` enum('pending','approved','rejected') DEFAULT 'pending',
   `payment_status` enum('pending','advance','paid') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `user_id`, `banquet_id`, `date`, `time_slot`, `event_type`, `status`, `payment_status`, `created_at`) VALUES
+(19, 1, 18, '2025-08-15', 'Evening (7 PM - 11 PM)', 'Corporate', 'pending', 'pending', '2025-07-27 05:47:17'),
+(20, 2, 18, '2025-08-14', 'Morning (10 AM - 2 PM)', 'Corporate', 'pending', 'pending', '2025-07-30 10:00:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `catering_services`
+--
+
+CREATE TABLE `catering_services` (
+  `id` int(11) NOT NULL,
+  `banquet_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price_per_head` decimal(10,2) NOT NULL,
+  `min_guests` int(11) DEFAULT 0,
+  `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -140,7 +179,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `phone`, `password`, `created_at`) VALUES
 (1, 'imran', 'ik775239@gmail.com', '03162811932', '$2y$10$nHq6oocGSxAGfPhpDx01C.3su6xvCLTZL2W7CLndlMxjZDxS1aIse', '2025-07-05 10:08:41'),
-(2, 'subhan', 'subhan@gmail.com', '03182243809', '$2y$10$3Vk9m/6PdhHtIYSi6c.CU.0aPlsuEprTq1cUdlLWe5bwxq4vWmcYG', '2025-07-06 03:36:21');
+(2, 'subhan', 'subhan@gmail.com', '03182243809', '$2y$10$3Vk9m/6PdhHtIYSi6c.CU.0aPlsuEprTq1cUdlLWe5bwxq4vWmcYG', '2025-07-06 03:36:21'),
+(3, 'qasim', 'qasim@gmail.com', '1351303212', '$2y$10$vWB0nfAktNKpXiTRHyTfJuSN8ENQLXjAS/mh/r5u8P8qp.KC8/kvW', '2025-08-01 05:34:10'),
+(4, 'khan', 'khan@gmail.com', '031546654', '$2y$10$HyCT4QdY.h5LMtCbYwYK4ulZLe4EvfBmWzsTeu7PB9kqjPXAuVXGS', '2025-08-04 06:05:28');
 
 --
 -- Indexes for dumped tables
@@ -183,6 +224,12 @@ ALTER TABLE `bookings`
   ADD KEY `banquet_id` (`banquet_id`);
 
 --
+-- Indexes for table `catering_services`
+--
+ALTER TABLE `catering_services`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -203,31 +250,37 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `banquets`
 --
 ALTER TABLE `banquets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `banquet_images`
 --
 ALTER TABLE `banquet_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `banquet_owner`
 --
 ALTER TABLE `banquet_owner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `catering_services`
+--
+ALTER TABLE `catering_services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
