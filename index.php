@@ -92,6 +92,8 @@ if ($search !== '') {
   </div>
 </section>
 <!-- section-3 -->
+
+<h2 class="text-center">Banquets</h2>
  <!--  TOP BANQUETS-->
 <section id="banquet-list" class="py-5 bg-light sec-2">
     <div class="container">
@@ -164,37 +166,58 @@ if ($search !== '') {
   </div>
 </section>
 <!-- Testimaonial -->
- <section class="py-5  bg-light">
-  <div class="container testimonial">
+<section class="py-5 bg-light">
+  <div class="container">
     <h2 class="text-center fw-bold mb-5">What Our Users Say</h2>
 
     <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner text-center">
+      <div class="carousel-inner">
 
         <!-- Slide 1 -->
         <div class="carousel-item active">
-          <img src="assets/images/user1.jpg" class="rounded-circle mb-3" width="80" alt="User 1">
-          <h5 class="fw-semibold">Ali Raza</h5>
-          <p class="text-muted">“Booked a banquet for my sister's wedding — the process was smooth and everything was perfect. Highly recommended!”</p>
+          <div class="d-flex justify-content-center">
+            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
+              <div class="text-center">
+                <img src="assets/images/user1.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 1">
+                <h5 class="fw-semibold">Ali Raza</h5>
+                <p class="text-muted fst-italic">“Booked a banquet for my sister's wedding — the process was smooth and everything was perfect. Highly recommended!”</p>
+                <div class="text-warning">★★★★★</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Slide 2 -->
         <div class="carousel-item">
-          <img src="assets/images/user2.jpg" class="rounded-circle mb-3" width="80" alt="User 2">
-          <h5 class="fw-semibold">Sara Khan</h5>
-          <p class="text-muted">“Beautiful interface and easy booking system. I love how quickly I found the perfect banquet.”</p>
+          <div class="d-flex justify-content-center">
+            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
+              <div class="text-center">
+                <img src="assets/images/user2.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 2">
+                <h5 class="fw-semibold">Sara Khan</h5>
+                <p class="text-muted fst-italic">“Beautiful interface and easy booking system. I love how quickly I found the perfect banquet.”</p>
+                <div class="text-warning">★★★★★</div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Slide 3 -->
         <div class="carousel-item">
-          <img src="assets/images/user3.jpg" class="rounded-circle mb-3" width="80" alt="User 3">
-          <h5 class="fw-semibold">Fahad Ahmed</h5>
-          <p class="text-muted">“Excellent customer support and the banquet listings are very detailed and genuine.”</p>
+          <div class="d-flex justify-content-center">
+            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
+              <div class="text-center">
+                <img src="assets/images/user3.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 3">
+                <h5 class="fw-semibold">Fahad Ahmed</h5>
+                <p class="text-muted fst-italic">“Excellent customer support and the banquet listings are very detailed and genuine.”</p>
+                <div class="text-warning">★★★★★</div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
 
-      <!-- Controls -->
+      <!-- Carousel Controls -->
       <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
@@ -206,6 +229,7 @@ if ($search !== '') {
     </div>
   </div>
 </section>
+
 <!-- banquet Owner Cta -->
  <section class="py-5 owner-cta text-center" >
    
