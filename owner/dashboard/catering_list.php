@@ -3,6 +3,11 @@ session_start();
 include("../../db.php");
 include("include/header.php");
 include("include/sidebar.php");
+$owner_id = $_SESSION['owner_id'];
+$stmt = $pdo->prepare("SELECT * FROM catering_services WHERE owner_id = ?");
+$catering_run = $stmt->execute([$owner_id]);
+$catering_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sr = 1;
 ?>
 
 
@@ -49,21 +54,21 @@ include("include/sidebar.php");
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if($banquet_data){?>
-                        <?php foreach ($banquet_data as $banquet_data) { ?>
+                        <?php if($catering_rows){?>
+                        <?php foreach ($catering_rows as $banquet_data) { ?>
                         <tr>
 
                             <td><?php echo $sr++; ?></td>
-                            <td class="fw-bold" style="color:#800000;"><?php echo $banquet_data["name"]; ?></td>
-                            <td><?php echo $banquet_data["owner_name"]; ?></td>
-                            <td><?php echo $banquet_data["location"]; ?></td>
+                            <td class="fw-bold" style="color:#800000;"><?php echo $banquet_data["title"]; ?></td>
+                            <td><?php echo $banquet_data["description"]; ?></td>
+                            <td><?php echo $banquet_data["price_per_head"]; ?></td>
+                            <td><?php echo $banquet_data["min_guests"]; ?></td>
                             <td>
                                 <span class="badge rounded-pill px-3 py-1"
                                     style="background:<?php echo ($banquet_data["status"] == "approved") ? "#DAA520" : "#800000"; ?>;color:#fff;">
                                     <?php echo ucfirst($banquet_data["status"]); ?>
                                 </span>
                             </td>
-                            <td><?php echo $banquet_data["Remarks"]; ?></td>
                             <td><?php echo date('d M Y', strtotime($banquet_data["created_at"])); ?></td>
                             <td>
                                 <a href="edit_banquet.php?id=<?php echo $banquet_data["id"]; ?>" class="me-2"
@@ -105,7 +110,7 @@ include("include/sidebar.php");
                             <select name="banquet_id" class="form-select" required>
                                 <option value="" hidden>Select Banquet</option>
                                 <?php
-                                        $owner_id = $_SESSION['owner_id'];
+                                        
                                         $banquets = $pdo->query("SELECT * FROM banquets WHERE owner_id = $owner_id");
                                         while ($b = $banquets->fetch(PDO::FETCH_ASSOC)):
                                         ?>
@@ -113,6 +118,7 @@ include("include/sidebar.php");
                                 <?php endwhile; ?>
                             </select>
                         </div>
+                        <input type="hidden" name="owner_id" value="<?php echo $owner_id; ?>">
 
                         <!-- Title -->
                         <div class="mb-3">
@@ -120,6 +126,11 @@ include("include/sidebar.php");
                             <input type="text" name="title" class="form-control" required>
                         </div>
 
+                        
+                        <div class="mb-3">
+                            <label>Description</label>
+                            <textarea name="description" class="form-control" id=""></textarea>
+                        </div>
                         <!-- Price Per Head -->
                         <div class="mb-3">
                             <label>Price Per Head (Rs)</label>
