@@ -939,36 +939,36 @@ form button[type="submit"] {
 
 
     function updateTimeSlots(selectedDate) {
-        $.getJSON("get_booked_slots.php", {
+                    $.getJSON("get_booked_slots.php", {
             date: selectedDate
-        }, function(bookedSlots) {
-            const slotMap = {
-                "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
-                "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
-            };
+                    }, function(bookedSlots) {
+                        const slotMap = {
+                            "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
+                            "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
+                        };
 
-            $("#timeSlot option").each(function() {
+                        $("#timeSlot option").each(function() {
                 const originalText = $(this).data("original-text");
-                if (originalText) {
-                    $(this).text(originalText);
-                }
-                $(this).prop("disabled", false);
-            });
+                            if (originalText) {
+                                $(this).text(originalText);
+                            }
+                            $(this).prop("disabled", false);
+                        });
 
-            bookedSlots.forEach(function(slotLabel) {
-                const slotValue = slotMap[slotLabel];
+                        bookedSlots.forEach(function(slotLabel) {
+                            const slotValue = slotMap[slotLabel];
                 const $option = $("#timeSlot option[value='" + slotValue + "']");
-                if ($option.length) {
-                    if (!$option.data("original-text")) {
+                            if ($option.length) {
+                                if (!$option.data("original-text")) {
                         $option.data("original-text", $option.text());
-                    }
-                    $option.text($option.text() + " (Booked)");
-                    $option.prop("disabled", true);
-                }
-            });
+                                }
+                                $option.text($option.text() + " (Booked)");
+                                $option.prop("disabled", true);
+                            }
+                        });
 
-            $("#timeSlot").val("");
-        });
+                        $("#timeSlot").val("");
+                    });
     }
 
     // Original flatpickr initialization for backward compatibility
