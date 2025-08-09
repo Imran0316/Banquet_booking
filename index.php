@@ -4,6 +4,7 @@ include 'db.php';
 include 'includes/header.php';
 $page ="home";
 include 'includes/navbar.php';
+
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 if ($search !== '') {
     $stmt = $pdo->prepare("SELECT * FROM banquets WHERE name LIKE :search OR location LIKE :search");
@@ -12,7 +13,29 @@ if ($search !== '') {
     $stmt = $pdo->query("SELECT * FROM banquets LIMIT 6");
 }
 
+// Feedback form insert code
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $message = trim($_POST['message']);
+    $rating = intval($_POST['rating']);
+
+    if (!empty($name) && !empty($email) && !empty($message) && $rating > 0) {
+        $insert = $pdo->prepare("INSERT INTO feedback (name, email, message, rating) VALUES (:name, :email, :message, :rating)");
+        $insert->execute([
+            'name' => $name,
+            'email' => $email,
+            'message' => $message,
+            'rating' => $rating
+        ]);
+        echo "<script>alert('Feedback submitted successfully!');</script>";
+    } else {
+        echo "<script>alert('Please fill all fields correctly.');</script>";
+    }
+}
 ?>
+
+
 
 <!-- Hero Carousel -->
 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -241,6 +264,138 @@ if ($search !== '') {
     </a>
   </div>
 </section>
+
+<!-- feedback form -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+      <form method="POST" action="">
+      <h2 class="mb-3 text-center fw-bold">Feedback Form</h2>
+      <p class="text-muted text-center mb-4">
+        Aap ka feedback hamaray liye important hai — thora waqt nikal kar form bhar dain.
+      </p>
+
+      <form id="feedbackForm" class="feedback-form p-4 rounded shadow-sm bg-white" novalidate>
+        <div class="mb-3">
+          <label for="name" class="form-label required">Name</label>
+          <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Your name" required>
+          <div class="invalid-feedback">Please enter your name.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label required">Email</label>
+          <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="name@example.com" required>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label required">Rating</label>
+          <div class="rating d-flex flex-row-reverse justify-content-start gap-1 fs-3">
+            <input type="radio" id="star5" name="rating" value="5">
+            <label for="star5" title="5 stars">★</label>
+            <input type="radio" id="star4" name="rating" value="4">
+            <label for="star4" title="4 stars">★</label>
+            <input type="radio" id="star3" name="rating" value="3">
+            <label for="star3" title="3 stars">★</label>
+            <input type="radio" id="star2" name="rating" value="2">
+            <label for="star2" title="2 stars">★</label>
+            <input type="radio" id="star1" name="rating" value="1" required>
+            <label for="star1" title="1 star">★</label>
+          </div>
+          <div class="invalid-feedback d-block" id="ratingFeedback" style="display:none;">Please choose a rating.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label required">Feedback</label>
+          <textarea class="form-control form-control-lg" id="message" name="message" rows="5" placeholder="Aapka feedback yahan likhain..." required></textarea>
+          <div class="invalid-feedback">Please write your feedback.</div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <button type="submit" name="feedback_submit" class="btn btn-primary btn-lg">Send Feedback</button>
+            <button type="reset" class="btn btn-outline-secondary btn-lg ms-2">Reset</button>
+          </div>
+          <small class="text-muted">We respect your privacy.</small>
+        </div>
+      </form>
+
+      <div class="mt-4" id="result" style="display:none;"></div>
+    </div>
+  </form>
+  </div>
+</div>
+
+<style>
+.feedback-form {
+  max-width: 100%;
+}
+.feedback-form label.required::after {
+  content: " *";
+  color: red;
+}
+.rating input {
+  display: none;
+}
+.rating label {
+  cursor: pointer;
+  color: #ccc;
+  font-size: 2rem;
+  transition: color 0.2s;
+}
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+  color: gold;
+}
+</style>
+
+
+<script>
+(function() {
+  const form = document.getElementById('feedbackForm');
+  const result = document.getElementById('result');
+  const ratingFeedback = document.getElementById('ratingFeedback');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+    }
+
+    const rating = form.querySelector('input[name="rating"]:checked');
+    if (!rating) {
+      ratingFeedback.style.display = 'block';
+    } else {
+      ratingFeedback.style.display = 'none';
+    }
+
+    if (form.checkValidity() && rating) {
+      const data = new FormData(form);
+      const preview = `
+        <div class="alert alert-success" role="alert">
+          <h5 class="alert-heading">Thank you!</h5>
+          <p>Your feedback has been captured (demo). Here's what you submitted:</p>
+          <hr>
+          <p><strong>Name:</strong> ${data.get('name')}</p>
+          <p><strong>Email:</strong> ${data.get('email')}</p>
+          <p><strong>Rating:</strong> ${data.get('rating')}</p>
+          <p><strong>Message:</strong><br>${data.get('message')}</p>
+        </div>`;
+
+      result.innerHTML = preview;
+      result.style.display = 'block';
+      form.reset();
+      form.classList.remove('was-validated');
+    }
+  }, false);
+})();
+</script>
+
+
+
 
 <?php
 include '../Banquet_booking/includes/footer.php';

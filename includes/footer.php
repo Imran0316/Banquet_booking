@@ -45,7 +45,7 @@
         <h6 class="fw-semibold mb-3 footer-title">For Owners</h6>
         <ul class="list-unstyled">
           <li><a href="owner_register.php" class="text-white footer-link">List Your Banquet</a></li>
-          <li><a href="owner_login.php" class="text-white footer-link">Owner Login</a></li>
+          <li><a href="../owner/index.php" class="text-white footer-link">Owner Login</a></li>
           <li><a href="admin_login.php" class="text-white footer-link">Admin Panel</a></li>
         </ul>
       </div>
