@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2025 at 05:28 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 09, 2025 at 09:55 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,8 +58,8 @@ CREATE TABLE `banquets` (
 --
 
 INSERT INTO `banquets` (`id`, `owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`, `Remarks`, `status`) VALUES
-(18, 4, 'marquee', 'sharah-e-noor jahan', 400, 75000.00, 'SkyDec Banquet is a modern and elegant event space designed to make your special moments unforgettable. Whether you\'re planning a wedding, birthday, corporate gathering, or a family function, our spacious hall, beautiful décor, and professional staff ensure a flawless experience.\r\n\r\n', '../../uploads/1753589936_library-of-congress-xPes12KkVUg-unsplash-min.jpg', '2025-07-23 15:56:12', 'rejected', 'rejected'),
-(21, 6, 'Concord', 'north nazimabad karachi', 600, 120000.00, 'Concord Banquet is a premium event venue designed to make your special occasions truly unforgettable. Located in a prime area, it offers a perfect blend of elegance and modern amenities. With spacious halls, ambient lighting, and exceptional service, Concord Banquet is ideal for weddings, corporate events, birthdays, and more. ', '../../uploads/1754043462_andra-c-taylor-jr-Qd-lPUtupYA-unsplash (1).jpg', '2025-08-01 10:17:42', 'waiting for approval', 'pending');
+(18, 4, 'marquee', 'sharah-e-noor jahan', 400, '75000.00', 'SkyDec Banquet is a modern and elegant event space designed to make your special moments unforgettable. Whether you\'re planning a wedding, birthday, corporate gathering, or a family function, our spacious hall, beautiful décor, and professional staff ensure a flawless experience.\r\n\r\n', '../../uploads/1753589936_library-of-congress-xPes12KkVUg-unsplash-min.jpg', '2025-07-23 15:56:12', 'rejected', 'rejected'),
+(21, 6, 'Concord', 'north nazimabad karachi', 600, '120000.00', 'Concord Banquet is a premium event venue designed to make your special occasions truly unforgettable. Located in a prime area, it offers a perfect blend of elegance and modern amenities. With spacious halls, ambient lighting, and exceptional service, Concord Banquet is ideal for weddings, corporate events, birthdays, and more. ', '../../uploads/1754043462_andra-c-taylor-jr-Qd-lPUtupYA-unsplash (1).jpg', '2025-08-01 10:17:42', 'waiting for approval', 'pending');
 
 -- --------------------------------------------------------
 
@@ -168,8 +168,30 @@ CREATE TABLE `catering_services` (
 --
 
 INSERT INTO `catering_services` (`id`, `banquet_id`, `owner_id`, `title`, `description`, `price_per_head`, `min_guests`, `status`, `created_at`) VALUES
-(2, 18, 4, 'chicken', 'chicken biryani,\nchicken qorma,\ncooldrink', 1200.00, 100, 'active', '2025-08-05 07:34:38'),
-(3, 18, 4, 'Beef', 'Beef Biryani,\r\nBeef Qorma,\r\nCooldrink,', 1600.00, 100, 'active', '2025-08-05 07:48:16');
+(2, 18, 4, 'chicken', 'chicken biryani,\nchicken qorma,\ncooldrink', '1200.00', 100, 'active', '2025-08-05 07:34:38'),
+(3, 18, 4, 'Beef', 'Beef Biryani,\r\nBeef Qorma,\r\nCooldrink,', '1600.00', 100, 'active', '2025-08-05 07:48:16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `message` text NOT NULL,
+  `rating` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`id`, `name`, `email`, `message`, `rating`, `created_at`) VALUES
+(1, 'Subhan ansari', 'subhanansarirr4@gmail.com', 'frrefggdgv', 2, '2025-08-09 07:52:30');
 
 -- --------------------------------------------------------
 
@@ -243,6 +265,12 @@ ALTER TABLE `catering_services`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -288,6 +316,12 @@ ALTER TABLE `bookings`
 --
 ALTER TABLE `catering_services`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
