@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2025 at 07:44 AM
+-- Generation Time: Aug 09, 2025 at 05:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -127,7 +127,11 @@ CREATE TABLE `bookings` (
   `banquet_id` int(11) DEFAULT NULL,
   `date` date DEFAULT NULL,
   `time_slot` varchar(50) DEFAULT NULL,
-  `event_type` varchar(100) DEFAULT NULL,
+  `payment_option` varchar(250) NOT NULL,
+  `notes` varchar(250) NOT NULL,
+  `address` varchar(250) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `payment_method` varchar(250) NOT NULL,
   `status` enum('pending','approved','rejected') DEFAULT 'pending',
   `payment_status` enum('pending','advance','paid') DEFAULT 'pending',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -137,9 +141,9 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `user_id`, `banquet_id`, `date`, `time_slot`, `event_type`, `status`, `payment_status`, `created_at`) VALUES
-(19, 1, 18, '2025-08-15', 'Evening (7 PM - 11 PM)', 'Corporate', 'pending', 'pending', '2025-07-27 05:47:17'),
-(20, 2, 18, '2025-08-14', 'Morning (10 AM - 2 PM)', 'Corporate', 'pending', 'pending', '2025-07-30 10:00:47');
+INSERT INTO `bookings` (`id`, `user_id`, `banquet_id`, `date`, `time_slot`, `payment_option`, `notes`, `address`, `amount`, `payment_method`, `status`, `payment_status`, `created_at`) VALUES
+(19, 1, 18, '2025-08-15', 'Evening (7 PM - 11 PM)', '0', '', '', 0, '', 'pending', 'pending', '2025-07-27 05:47:17'),
+(20, 2, 18, '2025-08-14', 'Morning (10 AM - 2 PM)', '0', '', '', 0, '', 'pending', 'pending', '2025-07-30 10:00:47');
 
 -- --------------------------------------------------------
 
@@ -150,6 +154,7 @@ INSERT INTO `bookings` (`id`, `user_id`, `banquet_id`, `date`, `time_slot`, `eve
 CREATE TABLE `catering_services` (
   `id` int(11) NOT NULL,
   `banquet_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `description` text DEFAULT NULL,
   `price_per_head` decimal(10,2) NOT NULL,
@@ -157,6 +162,14 @@ CREATE TABLE `catering_services` (
   `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `catering_services`
+--
+
+INSERT INTO `catering_services` (`id`, `banquet_id`, `owner_id`, `title`, `description`, `price_per_head`, `min_guests`, `status`, `created_at`) VALUES
+(2, 18, 4, 'chicken', 'chicken biryani,\nchicken qorma,\ncooldrink', 1200.00, 100, 'active', '2025-08-05 07:34:38'),
+(3, 18, 4, 'Beef', 'Beef Biryani,\r\nBeef Qorma,\r\nCooldrink,', 1600.00, 100, 'active', '2025-08-05 07:48:16');
 
 -- --------------------------------------------------------
 
@@ -274,13 +287,13 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `catering_services`
 --
 ALTER TABLE `catering_services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
