@@ -115,8 +115,10 @@ form button[type="submit"] {
 /* Simple Calendar Styles - No Card */
 #simpleCalendar {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    height: 450px; /* Increased height to accommodate time scale */
-    overflow-y: auto; /* Allow scrolling if needed */
+    height: 450px;
+    /* Increased height to accommodate time scale */
+    overflow-y: auto;
+    /* Allow scrolling if needed */
 }
 
 .calendar-header {
@@ -158,7 +160,8 @@ form button[type="submit"] {
 
 .calendar-body {
     padding: 15px;
-    padding-bottom: 140px; /* Increased space for time scale section */
+    padding-bottom: 140px;
+    /* Increased space for time scale section */
     position: relative;
 }
 
@@ -295,7 +298,7 @@ form button[type="submit"] {
     height: 100%;
     display: flex;
     align-items: center;
-    
+
 }
 
 .time-scale-line {
@@ -362,7 +365,7 @@ form button[type="submit"] {
     left: 50%;
     transform: translateX(-50%);
     font-size: 7px;
-    color:rgb(255, 0, 0);
+    color: rgb(255, 0, 0);
     font-weight: 400;
 }
 
@@ -378,14 +381,18 @@ form button[type="submit"] {
 }
 
 .booked-slot.morning {
-    left: 41.67%; /* 10 AM position */
-    width: 16.67%; /* 4 hours (10 AM - 2 PM) */
+    left: 41.67%;
+    /* 10 AM position */
+    width: 16.67%;
+    /* 4 hours (10 AM - 2 PM) */
     background: #ffc107;
 }
 
 .booked-slot.evening {
-    left: 79.17%; /* 7 PM position */
-    width: 16.67%; /* 4 hours (7 PM - 11 PM) */
+    left: 79.17%;
+    /* 7 PM position */
+    width: 16.67%;
+    /* 4 hours (7 PM - 11 PM) */
     background: #dc3545;
 }
 
@@ -409,15 +416,23 @@ form button[type="submit"] {
     border-radius: 1px;
 }
 
-.legend-color.booked { background: #6c757d; }
-.legend-color.morning { background: #ffc107; }
-.legend-color.evening { background: #dc3545; }
+.legend-color.booked {
+    background: #6c757d;
+}
+
+.legend-color.morning {
+    background: #ffc107;
+}
+
+.legend-color.evening {
+    background: #dc3545;
+}
 
 @media (max-width: 767px) {
     .main-gallery-image {
         height: 300px !important;
     }
-    
+
     .giggster-calendar {
         max-width: 100%;
     }
@@ -575,8 +590,9 @@ form button[type="submit"] {
 
     </div>
 
-        <!-- Simple Calendar - No Modal, No Card -->
-    <div id="simpleCalendar" style="display: none; position: absolute; top: 100%; left: 0; z-index: 1000; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 10px; min-width: 280px;">
+    <!-- Simple Calendar - No Modal, No Card -->
+    <div id="simpleCalendar"
+        style="display: none; position: absolute; top: 100%; left: 0; z-index: 1000; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 10px; min-width: 280px;">
         <div class="calendar-header">
             <div class="calendar-nav">
                 <button type="button" id="prevMonth">&lt;</button>
@@ -598,9 +614,10 @@ form button[type="submit"] {
                 <!-- Days will be populated by JavaScript -->
             </div>
         </div>
-        
-                 <!-- Time Scale Section -->
-         <div class="time-scale-section" id="timeScaleSection" style="display: none;" onmouseenter="keepTimeScaleVisible()" onmouseleave="hideTimeScale()">
+
+        <!-- Time Scale Section -->
+        <div class="time-scale-section" id="timeScaleSection" style="display: none;"
+            onmouseenter="keepTimeScaleVisible()" onmouseleave="hideTimeScale()">
             <div class="time-scale-header">Time Availability for <span id="selectedDateText"></span></div>
             <div class="time-scale">
                 <div class="time-scale-container">
@@ -632,25 +649,50 @@ form button[type="submit"] {
     let selectedDate = null;
     let bookingData = null;
 
+    // ---------- DATE HELPERS (fixed to avoid timezone shift) ----------
+    // Parse YYYY-MM-DD reliably into a local Date (avoids timezone shift).
+    function parseYMD(dateStr) {
+        if (!dateStr || typeof dateStr !== 'string') return new Date(dateStr);
+        const parts = dateStr.split('-').map(Number);
+        if (parts.length !== 3) return new Date(dateStr);
+        // new Date(year, monthIndex, day) constructs a local-date midnight
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    // Format a Date object into local YYYY-MM-DD (no timezone conversion).
+    function formatDate(date) {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
+    // Compare two dates by local Y-M-D (robust).
+    function isSameDay(date1, date2) {
+        if (!date1 || !date2) return false;
+        return formatDate(date1) === formatDate(date2);
+    }
+    // ------------------------------------------------------------------
+
     // Initialize calendar when page loads
     $(document).ready(function() {
         // Load booking data
         loadBookingData();
-        
+
         // Initialize custom calendar first
         initializeCustomCalendar();
-        
+
         // Add click handler to date input to show simple calendar
         $('#myDatePicker').on('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Position calendar above the input to avoid scrolling
             const input = $(this);
             const inputOffset = input.offset();
             const inputHeight = input.outerHeight();
             const calendarHeight = 300; // Approximate calendar height
-            
+
             $('#simpleCalendar').css({
                 'position': 'absolute',
                 'top': inputOffset.top - 450 - 10, // Above the input with new height
@@ -658,17 +700,17 @@ form button[type="submit"] {
                 'display': 'block'
             });
         });
-        
+
         // Close calendar when clicking outside
         $(document).on('click', function(e) {
             if (!$(e.target).closest('#simpleCalendar, #myDatePicker').length) {
                 $('#simpleCalendar').hide();
             }
         });
-        
+
         // Initialize flatpickr but disable it initially
         initializeFlatpickr();
-        
+
         // Disable flatpickr to prevent conflicts
         if (window.flatpickrInstance) {
             window.flatpickrInstance.close();
@@ -698,44 +740,45 @@ form button[type="submit"] {
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        
+
         // Update month title
         const monthNames = ["January", "February", "March", "April", "May", "June",
-                           "July", "August", "September", "October", "November", "December"];
+            "July", "August", "September", "October", "November", "December"
+        ];
         $('#currentMonth').text(monthNames[month] + ' ' + year);
-        
+
         // Get first day of month and number of days
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const startDate = new Date(firstDay);
         startDate.setDate(startDate.getDate() - firstDay.getDay());
-        
+
         let calendarHTML = '';
-        
+
         // Generate 6 weeks of days
         for (let week = 0; week < 6; week++) {
             for (let day = 0; day < 7; day++) {
                 const currentDay = new Date(startDate);
                 currentDay.setDate(startDate.getDate() + (week * 7) + day);
-                
+
                 const isCurrentMonth = currentDay.getMonth() === month;
                 const isToday = isSameDay(currentDay, new Date());
                 const isSelected = selectedDate && isSameDay(currentDay, selectedDate);
-                
+
                 // Check booking status
                 const dateStr = formatDate(currentDay);
                 const bookingStatus = getBookingStatus(dateStr);
-                
+
                 // Check if date is in the past
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 const isPastDate = currentDay < today;
-                
+
                 let dayClass = 'calendar-day';
                 if (!isCurrentMonth) dayClass += ' other-month';
                 if (isToday) dayClass += ' today';
                 if (isSelected) dayClass += ' selected';
-                
+
                 // Disable past dates
                 if (isPastDate) {
                     dayClass += ' disabled';
@@ -744,7 +787,7 @@ form button[type="submit"] {
                 } else if (bookingStatus === 'partially-booked') {
                     dayClass += ' partially-booked';
                 }
-                
+
                 // Add progress bar for booked dates
                 let progressBar = '';
                 if (bookingStatus !== 'available') {
@@ -755,11 +798,13 @@ form button[type="submit"] {
                         </div>
                     `;
                 }
-                
+
                 // Only allow click if not past date and not fully booked
-                const clickHandler = (isPastDate || bookingStatus === 'fully-booked') ? '' : `onclick="selectDate('${dateStr}')"`;
-                const hoverHandler = (isPastDate || bookingStatus === 'fully-booked') ? '' : `onmouseenter="showTimeScaleOnHover('${dateStr}')" onmouseleave="hideTimeScale()"`;
-                
+                const clickHandler = (isPastDate || bookingStatus === 'fully-booked') ? '' :
+                    `onclick="selectDate('${dateStr}')"`;
+                const hoverHandler = (isPastDate || bookingStatus === 'fully-booked') ? '' :
+                    `onmouseenter="showTimeScaleOnHover('${dateStr}')" onmouseleave="hideTimeScale()"`;
+
                 calendarHTML += `
                     <div class="${dayClass}" data-date="${dateStr}" ${clickHandler} ${hoverHandler}>
                         ${currentDay.getDate()}
@@ -768,22 +813,23 @@ form button[type="submit"] {
                 `;
             }
         }
-        
+
         $('#calendarDays').html(calendarHTML);
     }
 
     function showTimeScale(dateStr) {
-        const date = new Date(dateStr);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
+        // parse date string reliably to local Date
+        const date = parseYMD(dateStr);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         });
-        
+
         // Update selected date text
         $('#selectedDateText').text(formattedDate);
-        
+
         // Generate 24-hour timeline
         let hourMarkers = '';
         for (let i = 0; i <= 24; i++) {
@@ -792,7 +838,7 @@ form button[type="submit"] {
             const isFirstAM = i === 0;
             const isPM = i === 12;
             const isLastAM = i === 24;
-            
+
             hourMarkers += `
                 <div class="hour-marker">
                     <div class="hour-label">${hour}</div>
@@ -800,18 +846,18 @@ form button[type="submit"] {
                 </div>
             `;
         }
-        
+
         $('#hourMarkers').html(hourMarkers);
-        
+
         // Get booking status and show booked slots
         const bookingStatus = getBookingStatus(dateStr);
         let bookedSlotsHTML = '';
-        
+
         if (bookingStatus !== 'available') {
             const bookedSlots = bookingData.detailedBookings[dateStr] || [];
             const hasMorning = bookedSlots.includes("Morning (10 AM - 2 PM)");
             const hasEvening = bookedSlots.includes("Evening (7 PM - 11 PM)");
-            
+
             if (hasMorning) {
                 bookedSlotsHTML += '<div class="booked-slot morning"></div>';
             }
@@ -819,68 +865,19 @@ form button[type="submit"] {
                 bookedSlotsHTML += '<div class="booked-slot evening"></div>';
             }
         }
-        
+
         $('#bookedSlots').html(bookedSlotsHTML);
-        
+
         // Show the time scale section
         $('#timeScaleSection').show();
     }
-    
+
     // Hover functions for time scale
     function showTimeScaleOnHover(dateStr) {
-        const date = new Date(dateStr);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-        
-        // Update selected date text
-        $('#selectedDateText').text(formattedDate);
-        
-        // Generate 24-hour timeline
-        let hourMarkers = '';
-        for (let i = 0; i <= 24; i++) {
-            const hour = i === 0 ? 12 : (i > 12 ? i - 12 : i);
-            const ampm = i === 0 ? 'am' : (i === 12 ? 'pm' : (i > 12 ? 'pm' : 'am'));
-            const isFirstAM = i === 0;
-            const isPM = i === 12;
-            const isLastAM = i === 24;
-            
-            hourMarkers += `
-                <div class="hour-marker">
-                    <div class="hour-label">${hour}</div>
-                    ${(isFirstAM || isPM || isLastAM) ? `<div class="am-pm-label">${ampm}</div>` : ''}
-                </div>
-            `;
-        }
-        
-        $('#hourMarkers').html(hourMarkers);
-        
-        // Get booking status and show booked slots
-        const bookingStatus = getBookingStatus(dateStr);
-        let bookedSlotsHTML = '';
-        
-        if (bookingStatus !== 'available') {
-            const bookedSlots = bookingData.detailedBookings[dateStr] || [];
-            const hasMorning = bookedSlots.includes("Morning (10 AM - 2 PM)");
-            const hasEvening = bookedSlots.includes("Evening (7 PM - 11 PM)");
-            
-            if (hasMorning) {
-                bookedSlotsHTML += '<div class="booked-slot morning"></div>';
-            }
-            if (hasEvening) {
-                bookedSlotsHTML += '<div class="booked-slot evening"></div>';
-            }
-        }
-        
-        $('#bookedSlots').html(bookedSlotsHTML);
-        
-        // Show the time scale section
-        $('#timeScaleSection').show();
+        // delegate to same reliable routine (parsing inside)
+        showTimeScale(dateStr);
     }
-    
+
     function hideTimeScale() {
         // Hide time scale after a small delay to allow moving mouse to time scale
         setTimeout(function() {
@@ -889,86 +886,80 @@ form button[type="submit"] {
             }
         }, 100);
     }
-    
+
     function keepTimeScaleVisible() {
         // Keep time scale visible when hovering over it
         $('#timeScaleSection').show();
     }
 
     function selectDate(dateStr) {
-        selectedDate = new Date(dateStr);
-        
-        // Update the date input
+        // parse date string reliably to local Date
+        selectedDate = parseYMD(dateStr);
+
+        // Update the date input (use the same YYYY-MM-DD string)
         $('#myDatePicker').val(dateStr);
-        
+
         // Update flatpickr instance if it exists
         if (window.flatpickrInstance) {
             window.flatpickrInstance.setDate(dateStr);
         }
-        
+
         // Show time scale section
         showTimeScale(dateStr);
-        
+
         // Close the calendar
         $('#simpleCalendar').hide();
-        
+
         // Trigger time slot update
         updateTimeSlots(dateStr);
     }
 
     function getBookingStatus(dateStr) {
         if (!bookingData) return 'available';
-        
+
         if (bookingData.fullyBooked.includes(dateStr)) {
             return 'fully-booked';
         } else if (bookingData.partiallyBooked.includes(dateStr)) {
             return 'partially-booked';
         }
-        
+
         return 'available';
     }
 
-    function formatDate(date) {
-        return date.toISOString().slice(0, 10);
-    }
-
-    function isSameDay(date1, date2) {
-        return formatDate(date1) === formatDate(date2);
-    }
-
-
+    // NOTE: formatDate / isSameDay replaced above — any other code that relied on
+    // toISOString().slice behaviour will now use the local-safe formatDate.
 
     function updateTimeSlots(selectedDate) {
-                    $.getJSON("get_booked_slots.php", {
+        $.getJSON("get_booked_slots.php", {
             date: selectedDate
-                    }, function(bookedSlots) {
-                        const slotMap = {
-                            "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
-                            "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
-                        };
+        }, function(bookedSlots) {
+            const slotMap = {
+                "Morning (10 AM - 2 PM)": "Morning (10 AM - 2 PM)",
+                "Evening (7 PM - 11 PM)": "Evening (7 PM - 11 PM)"
+            };
 
-                        $("#timeSlot option").each(function() {
+            $("#timeSlot option").each(function() {
                 const originalText = $(this).data("original-text");
-                            if (originalText) {
-                                $(this).text(originalText);
-                            }
-                            $(this).prop("disabled", false);
-                        });
+                if (originalText) {
+                    $(this).text(originalText);
+                }
+                $(this).prop("disabled", false);
+            });
 
-                        bookedSlots.forEach(function(slotLabel) {
-                            const slotValue = slotMap[slotLabel];
+            bookedSlots.forEach(function(slotLabel) {
+                const slotValue = slotMap[slotLabel];
                 const $option = $("#timeSlot option[value='" + slotValue + "']");
-                            if ($option.length) {
-                                if (!$option.data("original-text")) {
+                if ($option.length) {
+                    if (!$option.data("original-text")) {
                         $option.data("original-text", $option.text());
-                                }
-                                $option.text($option.text() + " (Booked)");
-                                $option.prop("disabled", true);
-                            }
-                        });
+                    }
+                    $option.text($option.text() + " (Booked)");
+                    $option.prop("disabled", true);
+                }
+            });
 
-                        $("#timeSlot").val("");
-                    });
+            $("#timeSlot").val("");
+        });
     }
 
     // Original flatpickr initialization for backward compatibility
