@@ -147,7 +147,8 @@ try {
 
     // Success — redirect or show message
     // Redirect to a success page (example)
-    header("Location: booking_success.php?booking_id=" . urlencode($bookingId) . "&payment_id=" . urlencode($paymentId));
+    header("Location: booking_success.php?bookingId=$bookingId&paymentId=$paymentId");
+    $_SESSION['success_message'] = "Booking and payment saved successfully!";
     exit;
 
 } catch (Exception $e) {

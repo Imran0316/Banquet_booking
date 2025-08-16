@@ -154,7 +154,14 @@ $advanceFee = round($fullPrice * 0.3, 2);
             <div class="col-md-8">
                 <div class="card form-section">
                     <div class="card-body">
-                        <h5 class="mb-3">Complete Booking (Step-wise)</h5>
+                        <?php if(isset($_SESSION["success"])){
+                            echo '<div class="alert alert-success">' . $_SESSION["success"] . '</div>';
+                            unset($_SESSION["success"]);
+                        } elseif (isset($_SESSION["error"])) {
+                            echo '<div class="alert alert-danger">' . htmlspecialchars($signup_error) . '</div>';
+                            unset($_SESSION["error"]);
+                        } ?>
+                        <h5 class="mb-3">Book Your Slot</h5>
 
                         <!-- STEP 1: Personal (Signup) -->
                         <div class="step-box">
@@ -374,7 +381,7 @@ $advanceFee = round($fullPrice * 0.3, 2);
             <div class="col-md-4">
                 <div class="card card-summary">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="<?php echo htmlspecialchars($banquet['image']); ?>" alt="thumb">
+                        <img src="<?php echo htmlspecialchars($banquet["cover_image"]); ?>" alt="thumb">
                         <div class="ms-3">
                             <div class="fw-bold"><?php echo htmlspecialchars($banquet['name']); ?></div>
                             <div class="muted"><?php echo htmlspecialchars($banquet['location'] ?? ''); ?></div>
