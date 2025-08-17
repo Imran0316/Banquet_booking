@@ -15,8 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
     $description = $_POST["description"];
 
     $targetDir = "../../uploads/";
+    
     $fileName = basename($_FILES["cover_image"]["name"]);
-    $targetFile = $targetDir . time() . "_" . $fileName;
+    $newFileName = time() . "_" . $fileName;
+    $targetFile = $targetDir . $newFileName;
+    $dbPath = "uploads/" . $newFileName;
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
     $Allowedtype = ['jpg', 'jpeg', 'gif', 'png'];
@@ -26,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
 
             // INSERT MAIN BANQUET DATA
             $stmt = $pdo->prepare("INSERT INTO `banquets` (`owner_id`, `name`, `location`, `capacity`, `price`, `description`, `image`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
-            $stmt->execute([$owner_id, $Banquet_name, $location, $capacity, $price, $description, $targetFile]);
+            $stmt->execute([$owner_id, $Banquet_name, $location, $capacity, $price, $description, $dbPath]);
 
             // GET LAST INSERTED ID
             $banquet_id = $pdo->lastInsertId();
@@ -39,12 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["banquet_submit"])) {
                 for ($i = 0; $i < $imagesCount; $i++) {
                     if ($galleryImages["error"][$i] === 0) {
                         $galleryImageName = time() . "_" . rand(1000, 9999) . "_" . basename($galleryImages["name"][$i]);
-                        $targetPath = "../../uploads/" . $galleryImageName;
+                        $targetPath = $targetDir . $galleryImageName;
+                        $dbGalleryPath = "uploads/" . $galleryImageName;
 
                         if (move_uploaded_file($galleryImages["tmp_name"][$i], $targetPath)) {
                             // INSERT INTO banquet_images TABLE
                             $stmt2 = $pdo->prepare("INSERT INTO `banquet_images` (`banquet_id`, `image`, `uploaded_at`) VALUES (?, ?, NOW())");
-                            $stmt2->execute([$banquet_id, $targetPath]);
+                            $stmt2->execute([$banquet_id, $dbGalleryPath]);
                         }
                     }
                 }

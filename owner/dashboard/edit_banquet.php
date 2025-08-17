@@ -59,7 +59,7 @@ $banquet_row = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="mb-3">
                 <label class="form-label">Current Cover Image</label><br>
                 <?php if (!empty($banquet_row["image"])): ?>
-                    <img src="../../uploads<?php echo $banquet_row["image"]; ?>" class="img-thumbnail mb-2" style="width: 150px;">
+                    <img src="../../<?php echo $banquet_row["image"]; ?>" class="img-thumbnail mb-2" style="width: 150px;">
                 <?php else: ?>
                     <p class="text-muted">No image uploaded yet.</p>
                 <?php endif; ?>

@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["banquet_update"])) {
         $fileName = basename($_FILES["cover_image"]["name"]);
         $newImageName = time() . "_" . $fileName;
         $targetFile = $targetDir . $newImageName;
+        $dbPath = "uploads/" . $newImageName;
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
         $AllowedTypes = ['jpg', 'jpeg', 'gif', 'png'];
 
@@ -34,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["banquet_update"])) {
                 if (!empty($oldImage) && file_exists($oldImage)) {
                     unlink($oldImage);
                 }
-                $newImagePath = $targetFile;
+                $newImagePath = $dbPath;
             } else {
                 $_SESSION['error'] = "Image upload failed";
                 header("Location: edit_banquet.php?id=$banquet_id");
@@ -70,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["banquet_update"])) {
 
     // Update Query
     $stmt = $pdo->prepare("UPDATE banquets SET name = ?, location = ?, capacity = ?, price = ?, description = ?, image = ? WHERE id = ?");
-    $stmt->execute([$banquet_name, $location, $capacity, $price, $description, $newImagePath, $banquet_id]);
+    $stmt->execute([$banquet_name, $location, $capacity, $price, $description, $dbPath, $banquet_id]);
 
     $_SESSION["success"] = "Updated successfully";
     header("Location: edit_banquet.php?id=$banquet_id");

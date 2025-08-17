@@ -42,18 +42,26 @@ if (!$booking || !$payment) {
     <style>
         body {
             background: #f9f9f9;
+            background-image: url('../assets/images/success.png') !important;
+            background-size: cover;
+            background-position: center;
+
         }
 
         .success-card {
             max-width: 700px;
             margin: 50px auto;
             border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(165, 0, 0, 0.1);
+            background: transparent !important;
+            backdrop-filter: blur(15px);
+
         }
 
         .success-header {
-            background: linear-gradient(135deg, #8B0000, goldenrod);
-            color: #fff;
+            backdrop-filter: blur(5px);
+            background: transparent;
+            color: maroon;
             border-radius: 15px 15px 0 0;
             padding: 20px;
             text-align: center;
@@ -61,6 +69,10 @@ if (!$booking || !$payment) {
 
         .success-body {
             padding: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+        
         }
 
         .info-label {
@@ -74,29 +86,35 @@ if (!$booking || !$payment) {
     <div class="card success-card">
         <div class="success-header">
             <h2>Booking Confirmed!</h2>
-            <p>Thank you <strong class="text-uppercase"><?php echo htmlspecialchars($booking['name']); ?> </strong>, your booking was successful.</p>
+            <p>Thank you <strong class="text-uppercase"><?php echo htmlspecialchars($booking['name']); ?> </strong>,
+                your booking was successful.</p>
         </div>
         <div class="success-body">
-            <h5 class="mb-3">Booking Details</h5>
-            <p><span class="info-label">Booking ID:</span> <?php echo $booking['id']; ?></p>
-            <p><span class="info-label">Banquet:</span> <?php echo htmlspecialchars($booking['banquet_name']); ?></p>
-            <p><span class="info-label">Location:</span> <?php echo htmlspecialchars($booking['location']); ?></p>
-            <p><span class="info-label">Date:</span> <?php echo $booking['date']; ?></p>
-            <p><span class="info-label">Time Slot:</span> <?php echo $booking['time_slot']; ?></p>
-
-            <hr>
-            <h5 class="mb-3">Payment Details</h5>
-            <p><span class="info-label">Payment ID:</span> <?php echo rand() .  $payment['id'] ; ?></p>
-            <p><span class="info-label">Amount Paid:</span> Rs. <?php echo number_format($payment['amount'], 2); ?></p>
-            <p><span class="info-label">Payment Method:</span> <?php echo ucfirst($payment['method']); ?></p>
-            <p><span class="info-label">Status:</span>
-                <span class="badge bg-success"><?php echo ucfirst($payment['status']); ?></span>
-            </p>
-
-            <div class="mt-4 text-center">
-                <a href="my_bookings.php" class="btn btn-success me-2">View My Bookings</a>
-                <a href="index.php" class="btn btn-outline-dark">Go to Home</a>
+            <div class="left border-end border-dark pe-3">
+                <h5 class="mb-3">Booking Details</h5>
+                <p><span class="info-label">Booking ID:</span> <?php echo $booking['id']; ?></p>
+                <p><span class="info-label">Banquet:</span> <?php echo htmlspecialchars($booking['banquet_name']); ?>
+                </p>
+                <p><span class="info-label">Location:</span> <?php echo htmlspecialchars($booking['location']); ?></p>
+                <p><span class="info-label">Date:</span> <?php echo $booking['date']; ?></p>
+                <p><span class="info-label">Time Slot:</span> <?php echo $booking['time_slot']; ?></p>
             </div>
+        
+            <div class="right ps-3">
+                <h5 class="mb-3">Payment Details</h5>
+                <p><span class="info-label">Payment ID:</span> <?php echo rand() . $payment['id']; ?></p>
+                <p><span class="info-label">Amount Paid:</span> Rs. <?php echo number_format($payment['amount'], 2); ?>
+                </p>
+                <p><span class="info-label">Payment Method:</span> <?php echo ucfirst($payment['method']); ?></p>
+                <p><span class="info-label">Status:</span>
+                    <span class="badge text-dark"><?php echo ucfirst($payment['status']); ?></span>
+                </p>
+            </div>
+
+        </div>
+        <div class="m-4 text-center">
+            <a href="my_bookings.php" style="background-color: maroon; color: white; " class="btn  me-2">View My Bookings</a>
+            <a href="../index.php" style="border: 1px solid goldenrod; color: goldenrod; " class="btn ">Go to Home</a>
         </div>
     </div>
 </body>
