@@ -36,6 +36,140 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
 ?>
 
 
+<!-- 🎉 VIP Popup Offer -->
+<div id="vipOffer">
+  <div class="vip-content">
+    <span id="closePopup">&times;</span>
+    <h2>🎉 Exclusive Banquet Offer</h2>
+    <p>Book your banquet today & enjoy <b>25% OFF</b> with premium services!</p>
+    <a href="banquet_list.php" class="vip-btn">Book Now</a>
+  </div>
+</div>
+
+<!-- 🔥 Sticky Banner -->
+<div id="vipBanner">
+  <span>🎊 Special Deal: Luxury Banquet Booking <b>25% OFF</b></span>
+  <a href="banquet_list.php" class="banner-btn">Grab Offer</a>
+  <span id="closeBanner">&times;</span>
+</div>
+
+<style>
+/* ====== Popup Style ====== */
+#vipOffer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.6s ease;
+}
+.vip-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 450px;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  animation: scaleUp 0.5s ease;
+}
+.vip-content h2 {
+  color: #ff4081;
+  margin-bottom: 15px;
+}
+.vip-content p {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 20px;
+}
+.vip-btn {
+  display: inline-block;
+  background: linear-gradient(45deg, #ff4081, #ff9800);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+.vip-btn:hover {
+  background: linear-gradient(45deg, #ff9800, #ff4081);
+  transform: scale(1.05);
+}
+#closePopup {
+  position: absolute;
+  top: 15px; right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #888;
+}
+
+/* ====== Sticky Banner ====== */
+#vipBanner {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  background: #222;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  font-size: 18px;
+  z-index: 9999;
+  animation: slideUp 0.6s ease;
+}
+#vipBanner .banner-btn {
+  background: #ff4081;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.3s;
+}
+#vipBanner .banner-btn:hover {
+  background: #ff9800;
+}
+#closeBanner {
+  cursor: pointer;
+  font-size: 24px;
+  margin-left: auto;
+}
+
+/* ====== Animations ====== */
+@keyframes fadeIn {
+  from {opacity: 0;} to {opacity: 1;}
+}
+@keyframes scaleUp {
+  from {transform: scale(0.7);} to {transform: scale(1);}
+}
+@keyframes slideUp {
+  from {transform: translateY(100%);} to {transform: translateY(0);}
+}
+</style>
+
+<script>
+// Show popup automatically on page load
+window.addEventListener("load", function(){
+  document.getElementById("vipOffer").style.display = "flex";
+});
+
+// Close popup
+document.getElementById("closePopup").onclick = function(){
+  document.getElementById("vipOffer").style.display = "none";
+};
+
+// Close banner
+document.getElementById("closeBanner").onclick = function(){
+  document.getElementById("vipBanner").style.display = "none";
+};
+</script>
+
 
 <!-- Hero Carousel -->
 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
@@ -314,7 +448,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
 
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
           <div>
-            <button type="submit" name="feedback_submit" class="btn btn-primary btn-lg">Send Feedback</button>
+            <button type="submit" name="feedback_submit" class="btn btn-warning btn-lg fw-semibold px-4">Send Feedback</button>
             <button type="reset" class="btn btn-outline-secondary btn-lg ms-2">Reset</button>
           </div>
           <small class="text-muted">We respect your privacy.</small>
@@ -326,6 +460,108 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
   </form>
   </div>
 </div>
+
+
+<!-- Floating Review Button -->
+<button id="reviewBtn">
+   ⭐
+</button>
+
+<!-- Confetti Script -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+<script>
+document.getElementById("reviewBtn").addEventListener("click", function () {
+    // Confetti animation
+    confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 }
+    });
+
+    // Popup ya message
+    alert("🎉 Shukriya! welcome to mera shadi hall.");
+});
+</script>
+
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn">
+  <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<style>
+/* Scroll-to-Top Style */
+#scrollTopBtn {
+  position: fixed;
+  left: 20px;        /* 👈 left side */
+  bottom: 30px;      /* bottom distance */
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  background: #777;  /* gray background */
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: none; /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+#scrollTopBtn:hover {
+  transform: scale(1.15);
+  background: #555; /* darker gray on hover */
+}
+</style>
+
+<script>
+// Show/Hide on scroll
+let scrollBtn = document.getElementById("scrollTopBtn");
+
+window.onscroll = function () {
+  if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+    scrollBtn.style.display = "flex";
+  } else {
+    scrollBtn.style.display = "none";
+  }
+};
+
+// Smooth scroll to top
+scrollBtn.addEventListener("click", function () {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+
+
+<style>
+/* Floating Button Style */
+#reviewBtn {
+  position: fixed;
+  right: 20px;       /* right side distance */
+  bottom: 100px;     /* bottom se distance */
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: #ff4081;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+#reviewBtn:hover {
+  transform: scale(1.15);
+  background: #e73370;
+}
+</style>
+
 
 <style>
 .feedback-form {
@@ -349,6 +585,59 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
 .rating label:hover ~ label {
   color: gold;
 }
+
+
+/* ===== VIP Input + Label Design ===== */
+
+/* Input fields */
+.form-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  padding: 16px 14px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #222;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+}
+
+/* Hover & Focus effect */
+.form-control:focus {
+  border-color: #b892ff;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 14px rgba(184,146,255,0.5);
+  outline: none;
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  font-size: 15px;
+  color: #555;
+  display: inline-block;
+  margin-bottom: 6px;
+  position: relative;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+/* Required star ko VIP banaya */
+.form-label.required::after {
+  content: " *";
+  color: #ff4d6d;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Labels hover glow */
+.form-control:focus + .form-label,
+.form-label:hover {
+  color: #8e44ff;
+  text-shadow: 0 0 6px rgba(142,68,255,0.6);
+}
+
+
 </style>
 
 
