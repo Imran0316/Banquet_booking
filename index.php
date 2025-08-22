@@ -263,7 +263,7 @@ document.getElementById("closeBanner").onclick = function(){
                 <div class="card banquet-card shadow-sm border-0 rounded-4 overflow-hidden">
 
                     <!-- Image -->
-                    <img src="uploads<?php echo $banquet_row['image']; ?>" class="card-img-top"
+                    <img src="<?php echo $banquet_row['image']; ?>" class="card-img-top"
                         style="height: 180px; object-fit: cover;" alt="Banquet Image">
 
                     <!-- Card Body -->
@@ -286,10 +286,11 @@ document.getElementById("closeBanner").onclick = function(){
                     </div>
 
                 </div>
-            </div>
-
-
-            <?php }?>
+              </div>
+              
+              
+              <?php }?>
+              <a href="users/listed_banquets.php" class="btn btn-dark rounded-pill ">View All</a>
         </div>
     </div>
 </section>

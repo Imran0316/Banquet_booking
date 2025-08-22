@@ -449,7 +449,7 @@ form button[type="submit"] {
         <div class="row">
             <!-- Main Image -->
             <div class="col-lg-8 col-12 mb-3 mb-lg-0 ">
-                <img id="mainImage" src="../uploads<?php echo $banquet_data["image"] ?>"
+                <img id="mainImage" src="../<?php echo $banquet_data["image"] ?>"
                     class="img-fluid w-100 rounded main-gallery-image" style="height: 530px; object-fit: cover;"
                     alt="Main Image">
             </div>

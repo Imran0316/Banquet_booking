@@ -381,7 +381,8 @@ $advanceFee = round($fullPrice * 0.3, 2);
             <div class="col-md-4">
                 <div class="card card-summary">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="<?php echo htmlspecialchars($banquet["cover_image"]); ?>" alt="thumb">
+                        <img src="../<?php echo $banquet["image"]; ?>" alt="thumb">
+                        
                         <div class="ms-3">
                             <div class="fw-bold"><?php echo htmlspecialchars($banquet['name']); ?></div>
                             <div class="muted"><?php echo htmlspecialchars($banquet['location'] ?? ''); ?></div>
