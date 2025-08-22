@@ -48,26 +48,33 @@ include '../includes/header.php';
         <input type="tel" class="form-control" id="phone" name="phone" maxlength="11" 
                pattern="\d{11}" title="Phone number must be exactly 11 digits" required>
       </div>
+
+      <!-- ✅ Corrected Password Field -->
       <div class="form-group">
         <label for="password">Password:</label>
         <div class="input-group">
           <input type="password" class="form-control" id="password" name="password" 
-                 pattern="[A-Za-z]{6}[0-9]{9}" 
-                 title="Password must be 15 characters: 6 letters + 9 digits" required>
+                 minlength="8"
+                 title="Password must be at least 8 characters long"
+                 required>
           <div class="input-group-append">
             <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password')">👁</button>
           </div>
         </div>
       </div>
+
+      <!-- ✅ Confirm Password with Match Check -->
       <div class="form-group">
         <label for="confirm_pass">Confirm Password:</label>
         <div class="input-group">
-          <input type="password" class="form-control" id="confirm_pass" name="confirm_pass" required>
+          <input type="password" class="form-control" id="confirm_pass" name="confirm_pass" minlength="8" required>
           <div class="input-group-append">
             <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('confirm_pass')">👁</button>
           </div>
         </div>
+        <small id="passMsg" style="color:red; display:none;">Passwords do not match</small>
       </div>
+
       <button type="submit" class="btn btn-primary" name="signup">Sign up</button>
     </form>
     <p class="mt-3">Already have an account? <a href="login.php">login here</a></p>
@@ -77,12 +84,21 @@ include '../includes/header.php';
 <script>
 function togglePassword(fieldId) {
   let input = document.getElementById(fieldId);
-  if (input.type === "password") {
-    input.type = "text";
-  } else {
-    input.type = "password";
-  }
+  input.type = (input.type === "password") ? "text" : "password";
 }
+
+// ✅ Confirm Password Validation
+document.getElementById("confirm_pass").addEventListener("input", function() {
+  let pass = document.getElementById("password").value;
+  let confirmPass = this.value;
+  let msg = document.getElementById("passMsg");
+
+  if (confirmPass !== pass) {
+    msg.style.display = "block";
+  } else {
+    msg.style.display = "none";
+  }
+});
 </script>
 
 <style>
@@ -138,7 +154,6 @@ body {
   border-radius: 0;
 }
 
-
 .form-control:focus {
   outline: none; border-bottom: 2px solid #222;
 }
@@ -176,6 +191,7 @@ body {
   color: #1e7e34;
   border: 1px solid #1e7e34;
 }
+
 .input-group-append .btn {
   border: none !important;
   background: transparent !important;
@@ -188,6 +204,4 @@ body {
   background: transparent !important;
   box-shadow: none !important;
 }
-
-
 </style>

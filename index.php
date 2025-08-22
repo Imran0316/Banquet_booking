@@ -388,6 +388,9 @@ document.getElementById("closeBanner").onclick = function(){
   </div>
 </section>
 
+
+
+
 <!-- banquet Owner Cta -->
  <section class="py-5 owner-cta text-center" >
    
@@ -401,65 +404,108 @@ document.getElementById("closeBanner").onclick = function(){
 </section>
 
 <!-- feedback form -->
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-7">
-      <form method="POST" action="">
-      <h2 class="mb-3 text-center fw-bold">Feedback Form</h2>
-      <p class="text-muted text-center mb-4">
-        Aap ka feedback hamaray liye important hai — thora waqt nikal kar form bhar dain.
-      </p>
+<section class="feedback-section d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10 col-lg-9"> <!-- 👈 Chorai barhadi -->
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div class="card-body p-5 bg-white position-relative">
+            
+            <!-- Heading -->
+            <h2 class="mb-3 text-center fw-bold text-dark">💬 Share Your Feedback</h2>
+            <p class="text-muted text-center mb-4">
+              Aap ka feedback hamaray liye <span class="fw-semibold text-warning">bohot important</span> hai.
+            </p>
 
-      <form id="feedbackForm" class="feedback-form p-4 rounded shadow-sm bg-white" novalidate>
-        <div class="mb-3">
-          <label for="name" class="form-label required">Name</label>
-          <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Your name" required>
-          <div class="invalid-feedback">Please enter your name.</div>
-        </div>
+            <!-- Form -->
+            <form id="feedbackForm" method="POST" action="" novalidate>
+              <!-- Name -->
+              <div class="mb-3">
+                <label for="name" class="form-label fw-semibold">Name</label>
+                <input type="text" class="form-control rounded-3 shadow-sm border-0" id="name" name="name" placeholder="Your Name" required>
+                <div class="invalid-feedback">Please enter your name.</div>
+              </div>
 
-        <div class="mb-3">
-          <label for="email" class="form-label required">Email</label>
-          <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="name@example.com" required>
-          <div class="invalid-feedback">Please enter a valid email address.</div>
-        </div>
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
+                <input type="email" class="form-control rounded-3 shadow-sm border-0" id="email" name="email" placeholder="name@example.com" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
+              </div>
 
-        <div class="mb-3">
-          <label class="form-label required">Rating</label>
-          <div class="rating d-flex flex-row-reverse justify-content-start gap-1 fs-3">
-            <input type="radio" id="star5" name="rating" value="5">
-            <label for="star5" title="5 stars">★</label>
-            <input type="radio" id="star4" name="rating" value="4">
-            <label for="star4" title="4 stars">★</label>
-            <input type="radio" id="star3" name="rating" value="3">
-            <label for="star3" title="3 stars">★</label>
-            <input type="radio" id="star2" name="rating" value="2">
-            <label for="star2" title="2 stars">★</label>
-            <input type="radio" id="star1" name="rating" value="1" required>
-            <label for="star1" title="1 star">★</label>
+              <!-- Rating -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Rating</label>
+                <div class="rating d-flex flex-row-reverse justify-content-start gap-1 fs-3">
+                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
+                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+                  <input type="radio" id="star1" name="rating" value="1" required><label for="star1" title="1 star">★</label>
+                </div>
+                <div class="invalid-feedback d-block" id="ratingFeedback" style="display:none;">Please choose a rating.</div>
+              </div>
+
+              <!-- Feedback -->
+              <div class="mb-3">
+                <label for="message" class="form-label fw-semibold">Feedback</label>
+                <textarea class="form-control rounded-3 shadow-sm border-0" id="message" name="message" rows="4" placeholder="Aapka feedback yahan likhain..." required></textarea>
+                <div class="invalid-feedback">Please write your feedback.</div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <button type="submit" name="feedback_submit" class="btn btn-warning fw-semibold px-4 shadow-sm rounded-3">Send</button>
+                <button type="reset" class="btn btn-outline-secondary rounded-3">Reset</button>
+              </div>
+            </form>
+
+            <div class="mt-3" id="result" style="display:none;"></div>
           </div>
-          <div class="invalid-feedback d-block" id="ratingFeedback" style="display:none;">Please choose a rating.</div>
         </div>
-
-        <div class="mb-3">
-          <label for="message" class="form-label required">Feedback</label>
-          <textarea class="form-control form-control-lg" id="message" name="message" rows="5" placeholder="Aapka feedback yahan likhain..." required></textarea>
-          <div class="invalid-feedback">Please write your feedback.</div>
-        </div>
-
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-          <div>
-            <button type="submit" name="feedback_submit" class="btn btn-warning btn-lg fw-semibold px-4">Send Feedback</button>
-            <button type="reset" class="btn btn-outline-secondary btn-lg ms-2">Reset</button>
-          </div>
-          <small class="text-muted">We respect your privacy.</small>
-        </div>
-      </form>
-
-      <div class="mt-4" id="result" style="display:none;"></div>
+      </div>
     </div>
-  </form>
   </div>
-</div>
+</section>
+
+<style>
+  /* Background Section */
+  .feedback-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8f9fc, #eef1f7, #dde3f0);
+    padding: 20px;
+  }
+
+  /* Card hover effect */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+
+  /* Input focus */
+  .form-control:focus {
+    box-shadow: 0 0 8px rgba(255,193,7,0.5);
+    border: 1px solid #ffc107;
+  }
+
+  /* Rating Stars Styling */
+  .rating input {
+    display: none;
+  }
+  .rating label {
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .rating input:checked ~ label,
+  .rating label:hover,
+  .rating label:hover ~ label {
+    color: #ffc107;
+  }
+</style>
 
 
 <!-- Floating Review Button -->
@@ -560,84 +606,6 @@ scrollBtn.addEventListener("click", function () {
   transform: scale(1.15);
   background: #e73370;
 }
-</style>
-
-
-<style>
-.feedback-form {
-  max-width: 100%;
-}
-.feedback-form label.required::after {
-  content: " *";
-  color: red;
-}
-.rating input {
-  display: none;
-}
-.rating label {
-  cursor: pointer;
-  color: #ccc;
-  font-size: 2rem;
-  transition: color 0.2s;
-}
-.rating input:checked ~ label,
-.rating label:hover,
-.rating label:hover ~ label {
-  color: gold;
-}
-
-
-/* ===== VIP Input + Label Design ===== */
-
-/* Input fields */
-.form-control {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 14px;
-  padding: 16px 14px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #222;
-  transition: all 0.3s ease;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
-}
-
-/* Hover & Focus effect */
-.form-control:focus {
-  border-color: #b892ff;
-  background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 0 14px rgba(184,146,255,0.5);
-  outline: none;
-}
-
-/* Labels */
-.form-label {
-  font-weight: 600;
-  font-size: 15px;
-  color: #555;
-  display: inline-block;
-  margin-bottom: 6px;
-  position: relative;
-  transition: all 0.3s ease;
-  letter-spacing: 0.3px;
-}
-
-/* Required star ko VIP banaya */
-.form-label.required::after {
-  content: " *";
-  color: #ff4d6d;
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* Labels hover glow */
-.form-control:focus + .form-label,
-.form-label:hover {
-  color: #8e44ff;
-  text-shadow: 0 0 6px rgba(142,68,255,0.6);
-}
-
-
 </style>
 
 
