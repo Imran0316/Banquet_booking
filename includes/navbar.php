@@ -90,7 +90,7 @@ include 'header.php';
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="users/user_profile.php"> Profile</a></li>
-                                <li><a class="dropdown-item" href="../users/my_bookings.php">My Bookings</a></li>
+                                <li><a class="dropdown-item" href="users/my_bookings.php">My Bookings</a></li>
                                 <li>
                                     <hr class="dropdown-divider" style="border-color: goldenrod;">
                                 </li>
