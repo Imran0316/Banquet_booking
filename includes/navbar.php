@@ -89,7 +89,7 @@ include 'header.php';
                                 <span><?php echo $_SESSION["name"]; ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="profile.php"> Profile</a></li>
+                                <li><a class="dropdown-item" href="users/user_profile.php"> Profile</a></li>
                                 <li><a class="dropdown-item" href="../users/my_bookings.php">My Bookings</a></li>
                                 <li>
                                     <hr class="dropdown-divider" style="border-color: goldenrod;">

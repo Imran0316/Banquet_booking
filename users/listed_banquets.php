@@ -145,7 +145,7 @@ if ($search !== '') {
                 <div class="card banquet-card shadow-sm border-0 rounded-4 overflow-hidden">
 
                     <!-- Image -->
-                    <img src="uploads/<?php echo $banquet_row['image']; ?>" class="card-img-top"
+                    <img src="../<?php echo $banquet_row['image']; ?>" class="card-img-top"
                         style="height: 180px; object-fit: cover;" alt="Banquet Image">
 
                     <!-- Card Body -->

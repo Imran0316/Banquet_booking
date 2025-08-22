@@ -70,17 +70,26 @@ include 'header.php';
 
                     <?php if (isset($_SESSION['id'])):  ?>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="my_bookings.php">My Bookings</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../../banquet_booking/logout.php">Logout</a>
+                      <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown"
+                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                               
+                                <span><?php echo $_SESSION["name"]; ?></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="../user_profile.php"> Profile</a></li>
+                            <li><a class="dropdown-item" href="../users/my_bookings.php">My Bookings</a></li>
+                            <li>
+                                <hr class="dropdown-divider" style="border-color: goldenrod;">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="../logout.php">Logout</a></li>
+                        </ul>
                     </li>
                     <?php else:
           ?>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="../banquet_booking/users/login.php">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="register.php">Register</a>
