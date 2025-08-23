@@ -2,12 +2,61 @@
 session_start();
 include '../db.php';
 include '../includes/header.php';
+
+if (isset($_POST['signup'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $password = $_POST['password'];
+    $confirm_pass = $_POST['confirm_pass'];
+
+    // Check if passwords match
+    if ($password !== $confirm_pass) {
+        $_SESSION['error'] = "Passwords do not match.";
+        header("Location: register.php");
+        exit();
+    }
+
+    try {
+        // Check if email already exists
+        $checkQuery = "SELECT id FROM users WHERE email = :email";
+        $checkStmt = $pdo->prepare($checkQuery);
+        $checkStmt->bindParam(':email', $email);
+        $checkStmt->execute();
+
+        if ($checkStmt->rowCount() > 0) {
+            $_SESSION['error'] = "Email already exists.";
+            header("Location: register.php");
+            exit();
+        }
+
+        // Hash the password
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert user into the database
+        $query = "INSERT INTO users (name, email, phone, password) VALUES (:username, :email, :phone, :password)";
+        $stmt = $pdo->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':password', $hashed_password);
+        $stmt->execute();
+
+        $_SESSION['success'] = "Registration successful. You can now log in.";
+        header("Location: login.php");
+        exit();
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "Error: " . $e->getMessage();
+        header("Location: register.php");
+        exit();
+    }
+}
 ?>
 
 <div class="container-fluid signup-layout">
   <div class="illustration">
     <div class="circle-backdrop"></div>
-     <img src="...assets/images/logo_maroon.png" alt="Mera Shadi Hall Logo">
+     <img src="../assets/images/logo_maroon.png" alt="Mera Shadi Hall Logo">
   </div>
   <div class="form-wrapper">
 
@@ -105,7 +154,6 @@ document.getElementById("confirm_pass").addEventListener("input", function() {
 body {
   margin: 0; padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(to right bottom, #fce8e6, #fff5f9);
   display: flex; justify-content: center; align-items: center;
   height: 100vh;
 }
@@ -121,7 +169,7 @@ body {
 
 .circle-backdrop {
   position: absolute; width: 300px; height: 300px;
-  background: #ffc0cb; border-radius: 50%;
+  background: #8585854d; border-radius: 50%;
   top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 
@@ -154,8 +202,10 @@ body {
   border-radius: 0;
 }
 
-.form-control:focus {
-  outline: none; border-bottom: 2px solid #222;
+.form-control:focus-within {
+  outline: none;
+   border-bottom: 2px solid #222;
+   box-shadow: none;
 }
 
 .btn-primary {
@@ -204,4 +254,5 @@ body {
   background: transparent !important;
   box-shadow: none !important;
 }
+
 </style>
