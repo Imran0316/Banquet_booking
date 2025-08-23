@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['feedback_submit'])) {
 <div id="vipOffer">
   <div class="vip-content">
     <span id="closePopup">&times;</span>
-    <h2>🎉 Exclusive Banquet Offer</h2>
+    <h2>🎉 Welcome to <br> Mera Shadi Hall</h2>
     <p>Book your banquet today & enjoy <b>25% OFF</b> with premium services!</p>
     <a href="banquet_list.php" class="vip-btn">Book Now</a>
   </div>
@@ -324,69 +324,62 @@ document.getElementById("closeBanner").onclick = function(){
   </div>
 </section>
 <!-- Testimaonial -->
-<section class="py-5 bg-light">
+<section class="py-5" style="background:linear-gradient(to right, #f8f9fa, #ffffff);">
   <div class="container">
-    <h2 class="text-center fw-bold mb-5">What Our Users Say</h2>
+    <h2 class="text-center fw-bold mb-5 display-6">Our Valued Guests</h2>
+    <div class="row text-center align-items-stretch g-5">
 
-    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <div class="d-flex justify-content-center">
-            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
-              <div class="text-center">
-                <img src="assets/images/user1.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 1">
-                <h5 class="fw-semibold">Ali Raza</h5>
-                <p class="text-muted fst-italic">“Booked a banquet for my sister's wedding — the process was smooth and everything was perfect. Highly recommended!”</p>
-                <div class="text-warning">★★★★★</div>
-              </div>
-            </div>
+      <!-- Testimonial 1 -->
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <!-- Image with golden frame -->
+          <div class="position-relative mb-3" style="width:110px; height:110px;">
+            <img src="../assets/images/aliraza.jpg" class="rounded-circle shadow-lg w-100 h-100" alt="User 1">
+            <span class="position-absolute top-0 start-0 w-100 h-100 rounded-circle border border-4 border-warning"></span>
           </div>
+          <!-- Text -->
+          <blockquote class="fst-italic text-muted px-3">
+            “Booked a banquet for my sister's wedding — the process was smooth and everything was perfect. Highly recommended!”
+          </blockquote>
+          <h5 class="fw-bold mt-2">Ali Raza</h5>
+          <div class="text-warning fs-5">★★★★★</div>
         </div>
-
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <div class="d-flex justify-content-center">
-            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
-              <div class="text-center">
-                <img src="assets/images/user2.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 2">
-                <h5 class="fw-semibold">Sara Khan</h5>
-                <p class="text-muted fst-italic">“Beautiful interface and easy booking system. I love how quickly I found the perfect banquet.”</p>
-                <div class="text-warning">★★★★★</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-          <div class="d-flex justify-content-center">
-            <div class="card shadow-lg border-0 p-4 rounded-4" style="max-width: 600px;">
-              <div class="text-center">
-                <img src="assets/images/user3.jpg" class="rounded-circle mb-3 border border-3 border-white shadow" width="90" alt="User 3">
-                <h5 class="fw-semibold">Fahad Ahmed</h5>
-                <p class="text-muted fst-italic">“Excellent customer support and the banquet listings are very detailed and genuine.”</p>
-                <div class="text-warning">★★★★★</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
-      <!-- Carousel Controls -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
+      <!-- Testimonial 2 -->
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div class="position-relative mb-3" style="width:110px; height:110px;">
+            <img src="../assets/images/sarakhan.jpg" class="rounded-circle shadow-lg w-100 h-100" alt="User 2">
+            <span class="position-absolute top-0 start-0 w-100 h-100 rounded-circle border border-4 border-warning"></span>
+          </div>
+          <blockquote class="fst-italic text-muted px-3">
+            “Beautiful interface and easy booking system. I love how quickly I found the perfect banquet.”
+          </blockquote>
+          <h5 class="fw-bold mt-2">Sara Khan</h5>
+          <div class="text-warning fs-5">★★★★★</div>
+        </div>
+      </div>
+
+      <!-- Testimonial 3 -->
+      <div class="col-md-4">
+        <div class="d-flex flex-column align-items-center">
+          <div class="position-relative mb-3" style="width:110px; height:110px;">
+            <img src="../assets/images/fahad.jpg" class="rounded-circle shadow-lg w-100 h-100" alt="User 3">
+            <span class="position-absolute top-0 start-0 w-100 h-100 rounded-circle border border-4 border-warning"></span>
+          </div>
+          <blockquote class="fst-italic text-muted px-3">
+            “Excellent customer support and the banquet listings are very detailed and genuine.”
+          </blockquote>
+          <h5 class="fw-bold mt-2">Fahad Ahmed</h5>
+          <div class="text-warning fs-5">★★★★★</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
+
 
 
 

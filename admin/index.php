@@ -69,7 +69,7 @@ if($email == "imran@gmail.com"){
   <div class="col-md-5 col-lg-4">
     <div class="card shadow-lg border-0 rounded-4 p-4 bg-white">
       <div class="text-center mb-4">
-        <img src="assets/images/admin-logo.png" alt="Admin Logo" class="mb-3" style="width:80px;">
+        <img src="../assets/images/logo_goldenrod.png" alt="Admin Logo" class="mb-3" style="width:80px;">
         <h3 class="fw-bold text-dark">Admin Login</h3>
         <p class="text-muted small">Banquet Booking Management System</p>
       </div>
