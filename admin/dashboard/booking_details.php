@@ -178,10 +178,10 @@ if (isset($_GET['id'])) {
 
           
             <!-- Action Button -->
-            <button class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#actionModal">Action</button>
+            <!-- <button class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#actionModal">Action</button> -->
 
             <!-- Action Modal -->
-            <div class="modal fade" id="actionModal" tabindex="-1">
+            <!-- <div class="modal fade" id="actionModal" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <form method="POST" action="banquet_approve.php">
@@ -211,38 +211,7 @@ if (isset($_GET['id'])) {
                         </form>
                     </div>
                 </div>
-            </div>
-
-            <!-- Gallery Modal with Carousel -->
-            <div class="modal fade" id="galleryModal" tabindex="-1">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content bg-dark">
-                        <div class="modal-body p-0">
-                            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-                                <div class="carousel-inner">
-                                    <?php foreach ($gallery_images as $i => $image): ?>
-                                        <div class="carousel-item <?php echo $i == 0 ? 'active' : ''; ?>">
-                                            <img src="../../uploads/<?php echo $image['image']; ?>"
-                                                class="d-block w-100 gallery-modal-img">
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
-                                    data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon"></span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
-                                    data-bs-slide="next">
-                                    <span class="carousel-control-next-icon"></span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-center">
-                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div> -->
 
         </div>
     </div>

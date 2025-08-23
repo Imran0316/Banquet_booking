@@ -97,7 +97,6 @@ if ($search !== '') {
 
 .sec-2 {
 
-    background: url('../assets/images/pattern2.jpg') center/cover no-repeat;
     position: relative !important;
     background-attachment: fixed;
 
@@ -114,7 +113,6 @@ if ($search !== '') {
     <div class="hero-overlay">
         <h1 class="display-5 fw-bold">Find the Perfect Banquet</h1>
         <p class="lead">Choose from the best venues for weddings, parties & events</p>
-        <a href="#banquet-list" class="btn btn-light btn-sm mt-2">Browse Banquets</a>
     </div>
 </section>
 

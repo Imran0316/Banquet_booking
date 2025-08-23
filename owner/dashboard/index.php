@@ -61,20 +61,7 @@ include("include/header.php");
                 </div>
             </div>
         </div>
-        <!-- Welcome Banner -->
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="banner-card p-4 rounded-4 shadow-lg d-flex align-items-center justify-content-between" style="background:linear-gradient(90deg,#fffbe6 60%,#fff5f5 100%);">
-                    <div>
-                        <h3 class="fw-bold mb-2" style="color:#800000;font-family:'Playfair Display',serif;">Welcome, <?php echo $_SESSION['owner_name']; ?>!</h3>
-                        <p class="mb-0 text-secondary">Your VIP Banquet Dashboard is ready. Track bookings, revenue, and manage your banquets with style.</p>
-                    </div>
-                    <span class="d-none d-md-block">
-                        <i class="fas fa-crown fa-3x" style="color:#DAA520;"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
+       
     </div>
     <!-- Sale & Revenue End -->
 
