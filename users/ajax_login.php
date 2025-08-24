@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
+        $_SESSION['name'] = $user['name'];
         
         echo json_encode([
             'success' => true,

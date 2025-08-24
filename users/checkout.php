@@ -4,29 +4,49 @@ include("../db.php");
 include("include/header.php");
 $page = "inner";
 include("include/navbar.php");
-
+error_reporting(0);
 // Inputs
 $banquet_id = isset($_GET['banquetID']) ? intval($_GET['banquetID']) : (isset($_POST['banquetID']) ? intval($_POST['banquetID']) : 1);
 $date_selected = isset($_GET['event_date']) ? $_GET['event_date'] : (isset($_POST['event_date']) ? $_POST['event_date'] : date('Y-m-d'));
 $time_selected = isset($_GET['time_slot']) ? $_GET['time_slot'] : (isset($_POST['time_slot']) ? $_POST['time_slot'] : '');
 
-// Signup (unchanged logic)
 if (isset($_POST['user_signup'])) {
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $password = $_POST['password'] ?? '';
-    if ($name && $email && $phone && $password) {
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)");
-        if ($stmt->execute([$name, $email, $phone, $hash])) {
-            $_SESSION['id'] = $pdo->lastInsertId();
 
+    if ($name && $email && $phone && $password) {
+        // Check if email already exists
+        $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $checkStmt->execute([$email]);
+        if ($checkStmt->rowCount() > 0) {
+            $_SESSION['error'] = 'Email already registered. Please log in.';
         } else {
-            $signup_error = 'Error signing up. Please try again.';
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare("INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)");
+            if ($stmt->execute([$name, $email, $phone, $hash])) {
+                // Automatically log in the user after signup
+                $_SESSION['id'] = $pdo->lastInsertId();
+                $_SESSION['name'] = $name;
+                $_SESSION['email'] = $email;
+                $_SESSION['phone'] = $phone;
+
+                // Redirect to the next step
+                header("Location: checkout.php?banquetID=$banquet_id&event_date=$date_selected&time_slot=$time_selected");
+?>
+<script>
+    // Fallback JavaScript redirect to ensure proper page reload
+    window.location.href = "checkout.php?banquetID=<?php echo $banquet_id; ?>&event_date=<?php echo $date_selected; ?>&time_slot=<?php echo $time_selected; ?>";
+</script>
+<?php
+                exit(); // Ensure immediate redirection and stop further script execution
+            } else {
+                $_SESSION['error'] = 'Error signing up. Please try again.';
+            }
         }
     } else {
-        $signup_error = 'All signup fields are required.';
+        $_SESSION['error'] = 'All signup fields are required.';
     }
 }
 
@@ -158,8 +178,8 @@ $advanceFee = round($fullPrice * 0.3, 2);
                             echo '<div class="alert alert-success">' . $_SESSION["success"] . '</div>';
                             unset($_SESSION["success"]);
                         } elseif (isset($_SESSION["error"])) {
-                            echo '<div class="alert alert-danger">' . htmlspecialchars($signup_error) . '</div>';
-                            unset($_SESSION["error"]);
+                            echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION["error"]) . '</div>';
+                            unset($_SESSION["error"]); // Destroy the error session after displaying it
                         } ?>
                         <h5 class="mb-3">Book Your Slot</h5>
 
@@ -200,7 +220,7 @@ $advanceFee = round($fullPrice * 0.3, 2);
                                             </div>
                                             <div class="col-12 mt-3">
                                                 <button type="button" class="btn btn-primary" onclick="saveStep1()"><input
-                                                        type="submit" name="user_signup" value="singup"></button>
+                                                        type="submit" name="user_signup" class="bg-transparent border-0" value="singup"></button>
                                             </div>
                                             <small>Already have an Account
                                                 <a type="button" class="text-underline" data-bs-toggle="modal"
@@ -517,7 +537,6 @@ $advanceFee = round($fullPrice * 0.3, 2);
         function refreshAmountLeft() { const full = <?php echo json_encode($fullPrice); ?>; const opt = document.querySelector('.paymentOptionLeft:checked') ? document.querySelector('.paymentOptionLeft:checked').value : 'full'; const amount = opt === 'advance' ? parseFloat((full * 0.3).toFixed(2)) : parseFloat(full); $('#summaryAmount').text(amount.toFixed(2)); $('#hidden_payment_option_left').val(opt); $('#hidden_amount_left').val(amount.toFixed(2)); }
 
         function updateTimeSlots(dateStr) { $.getJSON('get_booked_slots.php', { date: dateStr, id: <?php echo $banquet_id; ?> }, function (booked) { $('#timeSlotLeft option').prop('disabled', false).each(function () { const orig = $(this).data('original-text'); if (orig) $(this).text(orig); }); booked.forEach(function (slot) { $('#timeSlotLeft option').filter(function () { return $(this).val() === slot; }).each(function () { $(this).data('original-text', $(this).text()); $(this).text($(this).text() + ' (Booked)'); $(this).prop('disabled', true); }); }); $('#timeSlotLeft').val(''); $('#hidden_time_slot_left').val(''); $('#summaryTime').text('--'); }); }
-
     </script>
 
 </body>
