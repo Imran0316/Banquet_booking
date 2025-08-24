@@ -4,183 +4,358 @@ include("../db.php");
 include("include/header.php");
 $page = "inner";
 include("include/navbar.php");
+// ensure user logged in
+if (!isset($_SESSION['id'])) {
+  header('Location: login.php');
+  exit;
+}
 
-// Fetch bookings for the logged-in user
-$userId = $_SESSION['id'] ?? null;
+$userId = (int) $_SESSION['id'];
+
+// fetch bookings for this user (most recent first)
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $stmt = $pdo->prepare("
-    SELECT b.id, b.date, b.time_slot, b.status, b.created_at, bn.name AS banquet_name,
-           bn.location, bn.description,bn.image AS banquet_image, bn.capacity, bn.price, bn.id AS banquet_id, u.name AS user_name
-    FROM bookings b
-    JOIN banquets bn ON b.banquet_id = bn.id
-    JOIN users u ON b.user_id = u.id
-    WHERE u.id = ?");
+    SELECT
+      bookings.id,
+      bookings.date,
+      bookings.time_slot AS booking_time,
+      bookings.status AS booking_status,
+      bookings.created_at,
+      banquets.name AS banquet_name,
+      banquets.price,
+      users.name AS user_name
+          FROM bookings
+    JOIN banquets ON bookings.banquet_id = banquets.id
+    JOIN users ON bookings.user_id = users.id
+    WHERE bookings.user_id = ?
+    ORDER BY bookings.date DESC, bookings.id DESC
+");
 $stmt->execute([$userId]);
+$bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// helper for booking code
+function booking_code($id)
+{
+  return 'WTS' . str_pad($id, 4, '0', STR_PAD_LEFT);
+}
 
 ?>
 
-\
-<!-- My Bookings Section -->
-<section class="my-bookings py-5">
-  <div class="container">
-    <h2 class="mb-4 fw-bold ">My Bookings</h2>
-    <?php
-    if (isset($_SESSION['success'])): ?>
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo $_SESSION['success'];
-        unset($_SESSION['success']); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    <?php elseif (isset($_SESSION["error"])): ?>
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php echo $_SESSION['erro'];
-        unset($_SESSION['error']); ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    <?php endif; ?>
-    <!-- Booking Card -->
-    <div class="card mb-4 shadow-sm border border-1 rounded-3">
-      <div class="row g-0">
-        <?php
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $booking): ?>
-          <?php
-          $bookingId = $booking["id"];
-          $banquetId = $booking["banquet_id"];
-          ?>
-          <!-- Banquet Image -->
-          <div class="col-md-3">
-            <img src="../<?php echo htmlspecialchars($booking['banquet_image']); ?>" class="img-fluid rounded-start h-100"
-              alt="Banquet Image">
+<style>
+  :root {
+    --c1: #28b6c1;
+    --c2: #13a0ab;
+    --stub: #fff;
+    --muted: #e9fbfd;
+    --shadow: 0 8px 28px rgba(12, 40, 45, .12);
+    --fs-location: clamp(.9rem, 2.2vw, 1.05rem);
+    --fs-clock: clamp(.95rem, 2.2vw, 1.04rem);
+    --fs-meta: clamp(.78rem, 1.9vw, .9rem);
+    --stub-w: 124px;
+    --notch-r: 18px;
+  }
 
-          </div>
-          <!-- Booking Details -->
+  body {
+    background: #f5f9fb;
 
-          <div class="col-md-9">
-            <div class="card-body ">
-              <h3 class="card-title fw-bold text-capitalize"><?php echo $booking["banquet_name"] ?></h3>
-              <p class="card-text mb-1"><strong>Date:
-                </strong><?php echo $booking["date"] . " " . $booking["time_slot"] ?></p>
-              <p class="card-text mb-1"><strong>Capacity: </strong><?php echo $booking["capacity"] ?></p>
-              <p class="card-text mb-1"><strong>Price: </strong><?php echo $booking["price"] ?></p>
-              <p class="card-text"><strong>Status: </strong><span
-                  class="badge text-dark"><?php echo $booking["status"] ?></span></p>
+    font-family: system-ui, Segoe UI, Roboto, Arial;
+    margin: 0
+  }
 
-              <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                data-bs-target="#simpleDetailsModal">
-                View Details
-              </button>
-              <?php if ($booking["status"] === 'canceled'): ?>
-                <button disabled type="button" class="btn btn-danger" id="confirmCancelBtn">
-                  Cancel
-                </button> <br>
-                <small class="text-danger">Booking Already Canceled</small>
-              <?php else: ?>
-                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelBookingModal">
-                  Cancel
-                </button>
-              <?php endif; ?>
+  .ticket {
+    /* show whole element normally */
+    -webkit-mask-image:
+      radial-gradient(circle var(--notch-r) at calc(100% - var(--stub-w) + 6px) 4px, transparent 60%, black 61%),
+      radial-gradient(circle var(--notch-r) at calc(100% - var(--stub-w) + 6px) calc(100% - 4px), transparent 60%, black 61%),
+      linear-gradient(#000, #000);
+    /* fallback, keep rest visible */
+    mask-image:
+      radial-gradient(circle var(--notch-r) at calc(100% - var(--stub-w) + 6px) 4px, transparent 60%, black 61%),
+      radial-gradient(circle var(--notch-r) at calc(100% - var(--stub-w) + 6px) calc(100% - 4px), transparent 60%, black 61%),
+      linear-gradient(#000, #000);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    /* may need vendor tweaks per browser */
+    background: white;
+    /* ticket bg */
+  }
+
+  .ticket {
+    display: flex;
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 14px;
+    overflow: visible;
+    box-shadow: var(--shadow)
+  }
+
+  .left {
+    flex: 1;
+    padding: 20px 22px;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    background: #0000FF;
+    color: #fff
+  }
+
+  .location {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.05rem
+  }
+
+  .flag {
+    width: 28px;
+    height: 18px;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08)
+  }
+
+  .time {
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center
+  }
+
+  .clock {
+    font-weight: 700;
+    font-size: 1.05rem
+  }
+
+  .meta {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px
+  }
+
+  .meta .id {
+    font-size: .9rem;
+    color: rgba(255, 255, 255, .9)
+  }
+
+  .price {
+    font-weight: 800;
+    font-size: 1.05rem;
+    background: rgba(255, 255, 255, .12);
+    padding: .35rem .7rem;
+    border-radius: .6rem
+  }
+
+  .stub {
+    width: 120px;
+    background: var(--stub);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-left: 2px dotted #0000FF;
+    justify-content: center;
+    padding: 12px 10px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    box-shadow: inset -6px 0 20px rgba(0, 0, 0, .03)
+  }
+
+  .stub .day {
+    font-size: .75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: .06em
+  }
+
+  .stub .date {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 6px
+  }
+
+  .stub .month {
+    font-size: .8rem;
+    color: #0f172a;
+    margin-top: 2px;
+    font-weight: 700
+  }
+
+  /* .ticket::before,
+  .ticket::after {
+    content: "";
+    width: 28px;
+    height: 28px;
+    background: #f5f9fb;
+    position: absolute;
+    right: 105px;
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .02)
+  }
+
+  .ticket::before {
+    top: -14px
+  }
+
+  .ticket::after {
+    bottom: -14px
+  } */
+  /* ---------- MOBILE ADJUSTMENTS (keep row layout but scale down) ---------- */
+  /* Use breakpoints to reduce padding/sizes but keep same structure */
+  @media (max-width:540px) {
+    :root {
+      --fs-location: .94rem;
+      --fs-clock: .95rem;
+      --fs-meta: .74rem;
+    }
+
+    /* slightly smaller left padding and stub width */
+    .left {
+      padding: 10px 12px;
+    }
+
+    .location {
+      gap: 8px
+    }
+
+    .flag {
+      width: 22px;
+      height: 14px
+    }
+
+    .time {
+      gap: 8px
+    }
+
+    .meta {
+      margin-top: 10px
+    }
+
+    .price {
+      padding: .28rem .5rem;
+      font-size: .82rem
+    }
+
+    /* stub smaller but keep on right */
+    .stub {
+      width: 84px;
+      padding: 8px
+    }
+
+    .stub .date {
+      font-size: 1.25rem
+    }
+
+    .ticket::before,
+    .ticket::after {
+      right: 78px;
+      width: 20px;
+      height: 20px;
+      top: -10px;
+      bottom: -10px;
+    }
+
+    /* ensure text wraps & left panel shrinks instead of stacking */
+    .left {
+      min-width: 0
+    }
+
+    .ticket {
+      flex-wrap: nowrap
+    }
+
+    /* important: prevent stacking to column */
+  }
+
+  /* final fallback for very very small screens (if absolutely needed) */
+  @media (max-width:360px) {
+    .left {
+      padding: 8px 10px
+    }
+
+    .stub {
+      width: 72px
+    }
+
+    .flag {
+      width: 20px;
+      height: 12px
+    }
+
+    .stub .date {
+      font-size: 1.05rem
+    }
+  }
+</style>
+<div class="container">
+  <h3 class="m-5 text-center">Your Bookings</h3>
+
+  <div id="alerts" class="alert-area"></div>
+
+  <?php if (empty($bookings)): ?>
+    <div class="card p-3 mb-3 ">You have no bookings yet.</div>
+  <?php endif; ?>
+
+  <?php foreach ($bookings as $b):
+    $status = $b['booking_status'];
+    $badgeClass = $status === 'cancelled' ? 'badge-cancelled' : ($status === 'pending' ? 'badge-pending' : 'badge-confirmed');
+    $date = $b['date'] ?: $b['created_at'];
+    $dt = new DateTime($date);
+    ?>
+    <div class="ticket position-relative my-5" data-id="<?= (int) $b['id'] ?>">
+      <div class="left">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="location">
+              <span class="flag">
+                <i class="fa-brands fa-fort-awesome-alt fs-3"
+                  style="width:100%;height:100%;object-fit:cover;display:block"></i></span>
+              <span style="margin-left:6px;"><?= htmlspecialchars($b['banquet_name']) ?> ·
+                <?= htmlspecialchars($b['user_name']) ?></span>
             </div>
-          </div>
-        <?php endforeach; ?>
-      </div>
-    </div>
 
+            <div class="time">
+              <div>
+                <div class="clock"><?= htmlspecialchars($b['booking_time']) ?: 'N/A' ?></div>
+                <div style="font-size:.82rem;color:rgba(255,255,255,.95)">Time</div>
+              </div>
 
-
-  </div>
-</section>
-
-<!-- Cancel Booking Modal -->
-<div class="modal fade" id="cancelBookingModal" tabindex="-1" aria-labelledby="cancelBookingLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-3">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cancelBookingLabel">Cancel Booking</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-        <p class="mb-3">Are you sure you want to cancel this booking?</p>
-        <p>Advance non-refundalble</p>
-
-        <a href="/cancellation-policies" class="link-primary" target="_blank" rel="noopener">
-          View Cancellation Policies
-        </a>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Keep Booking</button>
-
-        <button type="button" class="btn btn-danger" id="confirmCancelBtn">
-          <a href="booking_cancel.php?booking_id=<?php echo $booking["id"] ?>"
-            class="text-decoration-none text-white">Cancel</a>
-        </button>
-
-      </div>
-    </div>
-  </div>
-</div>
-<!-- DETAILS MODEL -->
-<div class="modal fade" id="simpleDetailsModal" tabindex="-1" aria-labelledby="simpleDetailsModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="simpleDetailsModalLabel">Booking / Banquet Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Replace below with dynamic content later -->
-        <div class="row">
-          <div class="col-md-5">
-            <img src="../<?php echo $booking["banquet_image"] ?>" alt="Banquet" class="img-fluid rounded mb-3">
-          </div>
-          <div class="col-md-7">
-            <table class="table table-sm table-borderless">
-              <tbody>
-                <tr>
-                  <th class="w-40">Banquet</th>
-                  <td id="md-banquet-name"><?php echo $booking["banquet_name"] ?></td>
-                </tr>
-                <tr>
-                  <th>Location</th>
-                  <td id="md-location"><?php echo $booking["location"] ?></td>
-                </tr>
-                <tr>
-                  <th>Booking Date</th>
-                  <td id="md-date"><?php echo $booking["date"] ?></td>
-                </tr>
-                <tr>
-                  <th>Time Slot</th>
-                  <td id="md-slot"><?php echo $booking["time_slot"] ?></td>
-                </tr>
-                <tr>
-                  <th>Guests</th>
-                  <td id="md-guests"><?php echo $booking["capacity"] ?></td>
-                </tr>
-                <tr>
-                  <th>Price</th>
-                  <td id="md-price"><?php echo $booking["price"] ?></td>
-                </tr>
-                <tr>
-                  <th>Status</th>
-                  <td id="md-status"><span class="badge bg-success"><?php echo $booking["status"] ?></span></td>
-                </tr>
-              </tbody>
-            </table>
+              <div class="ms-auto text-end" style="color:rgba(255,255,255,.85);font-size:.88rem">
+                <div>Booking ID</div>
+                <div style="font-weight:700"><?= booking_code($b['id']) ?></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <hr>
-        <h6>Description</h6>
-        <p id="md-desc"><?php echo $booking["description"] ?></p>
+        <div class="meta">
+          <div class="id">Booked on <span
+              style="opacity:.95;margin-left:6px;font-weight:700"><?= htmlspecialchars($dt->format('Y-m-d')) ?></span>
+          </div>
+          <div>
+            <span class="price"><?= htmlspecialchars($b['price'] ?: '—') ?></span>
+            <span class="badge <?= $badgeClass ?>"
+              style="margin-left:10px;padding:.45rem .6rem;border-radius:.5rem"><?= ucfirst($status) ?></span>
+          </div>
+        </div>
       </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal">Close</button>
+      <div class="stub">
+        <div class="day"><?= htmlspecialchars($dt->format('M')) ?></div>
+        <div class="date"><?= htmlspecialchars($dt->format('d')) ?></div>
+        <div class="month" style="margin-top:6px;font-weight:600;color:#64748b"><?= htmlspecialchars($dt->format('Y')) ?>
+        </div>
       </div>
     </div>
-  </div>
+
+
+
+  <?php endforeach; ?>
 </div>
+
 
 <?php
 include("../includes/footer.php");

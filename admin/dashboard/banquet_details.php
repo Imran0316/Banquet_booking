@@ -57,7 +57,7 @@ $gallery_images = $img_stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
 
             <!-- Cover Image -->
-            <img src="../../uploads<?php echo $banquet_row['image']; ?>" alt="Cover Image" class="cover-img">
+            <img src="../../<?php echo $banquet_row['image']; ?>" alt="Cover Image" class="cover-img">
 
             <!-- Banquet Info Table -->
             <div class="table-responsive mb-3">

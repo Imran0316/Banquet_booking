@@ -18,9 +18,11 @@
     .text-light-muted {
       color: #cccccc;
     }
+   
+  
   </style>
 
-  <div class="container">
+  <div class="container footer-container">
     <div class="row g-4">
 
       <!-- Logo & Description -->
