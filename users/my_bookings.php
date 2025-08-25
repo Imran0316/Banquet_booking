@@ -10,6 +10,7 @@ if (!isset($_SESSION['id'])) {
   exit;
 }
 
+
 $userId = (int) $_SESSION['id'];
 
 // fetch bookings for this user (most recent first)
@@ -23,6 +24,9 @@ $stmt = $pdo->prepare("
       bookings.created_at,
       banquets.name AS banquet_name,
       banquets.price,
+      banquets.capacity,
+      banquets.location AS banquet_address,
+      banquets.image AS banquet_image,
       users.name AS user_name
           FROM bookings
     JOIN banquets ON bookings.banquet_id = banquets.id
@@ -90,12 +94,17 @@ function booking_code($id)
     box-shadow: var(--shadow)
   }
 
+  .ticket:hover {
+    scale: 1.05;
+    transition: all 0.3s ease-in-out;
+  }
+
   .left {
     flex: 1;
     padding: 20px 22px;
     border-top-left-radius: 14px;
     border-bottom-left-radius: 14px;
-    background: #0000FF;
+    background: maroon;
     color: #fff
   }
 
@@ -154,12 +163,13 @@ function booking_code($id)
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-left: 2px dotted #0000FF;
+    border-left: 2px dotted maroon !important;
     justify-content: center;
     padding: 12px 10px;
+    border: 1px solid maroon;
     border-top-right-radius: 14px;
     border-bottom-right-radius: 14px;
-    box-shadow: inset -6px 0 20px rgba(0, 0, 0, .03)
+    box-shadow: inset -6px 0 20px goldenrod;
   }
 
   .stub .day {
@@ -290,10 +300,21 @@ function booking_code($id)
     }
   }
 </style>
-<div class="container">
-  <h3 class="m-5 text-center">Your Bookings</h3>
 
-  <div id="alerts" class="alert-area"></div>
+
+
+<div class="container d-flex flex-column px-3">
+  <h3 class="m-4 text-center">Your Bookings</h3>
+
+  <div id="alerts" class="alert-area text-center">
+      <?php if (isset($_SESSION["success"])) {
+        echo '<small class="text-denger">' . $_SESSION["success"] . '</small>';
+        unset($_SESSION["success"]);
+      } elseif (isset($_SESSION["error"])) {
+        echo '<small class="text-danger">' . htmlspecialchars($_SESSION["error"]) . '</small>';
+        unset($_SESSION["error"]);
+      } ?>
+  </div>
 
   <?php if (empty($bookings)): ?>
     <div class="card p-3 mb-3 ">You have no bookings yet.</div>
@@ -305,58 +326,187 @@ function booking_code($id)
     $date = $b['date'] ?: $b['created_at'];
     $dt = new DateTime($date);
     ?>
-    <div class="ticket position-relative my-5" data-id="<?= (int) $b['id'] ?>">
-      <div class="left">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <div class="location">
-              <span class="flag">
-                <i class="fa-brands fa-fort-awesome-alt fs-3"
-                  style="width:100%;height:100%;object-fit:cover;display:block"></i></span>
-              <span style="margin-left:6px;"><?= htmlspecialchars($b['banquet_name']) ?> ·
-                <?= htmlspecialchars($b['user_name']) ?></span>
+    <button type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal">
+      <div class="ticket position-relative my-3" data-id="<?= (int) $b['id'] ?>">
+        <div class="left">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="location">
+                <span class="flag">
+                  <i class="fa-brands fa-fort-awesome-alt fs-3"
+                    style="width:100%;height:100%;object-fit:cover;display:block;color: goldenrod;"></i></span>
+                <span style="margin-left:6px;"><?= htmlspecialchars($b['banquet_name']) ?> ·
+                  <?= htmlspecialchars($b['user_name']) ?></span>
+              </div>
+
+              <div class="time">
+                <div>
+                  <div class="clock"><?= htmlspecialchars($b['booking_time']) ?: 'N/A' ?></div>
+                  <div style="font-size:.82rem;color:rgba(255,255,255,.95)">Time</div>
+                </div>
+
+                <div class="ms-auto text-end" style="color:rgba(255,255,255,.85);font-size:.88rem">
+                  <div>Booking ID</div>
+                  <div style="font-weight:700"><?= booking_code($b['id']) ?></div>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div class="time">
-              <div>
-                <div class="clock"><?= htmlspecialchars($b['booking_time']) ?: 'N/A' ?></div>
-                <div style="font-size:.82rem;color:rgba(255,255,255,.95)">Time</div>
-              </div>
-
-              <div class="ms-auto text-end" style="color:rgba(255,255,255,.85);font-size:.88rem">
-                <div>Booking ID</div>
-                <div style="font-weight:700"><?= booking_code($b['id']) ?></div>
-              </div>
+          <div class="meta">
+            <div class="id">Booked on <span
+                style="opacity:.95;margin-left:6px;font-weight:700"><?= htmlspecialchars($dt->format('Y-m-d')) ?></span>
+            </div>
+            <div>
+              <span class="price"><?= htmlspecialchars($b['price'] ?: '—') ?></span>
+              <span class="badge <?= $badgeClass ?>"
+                style="margin-left:10px;padding:.45rem .6rem;border-radius:.5rem"><?= ucfirst($status) ?></span>
             </div>
           </div>
         </div>
 
-        <div class="meta">
-          <div class="id">Booked on <span
-              style="opacity:.95;margin-left:6px;font-weight:700"><?= htmlspecialchars($dt->format('Y-m-d')) ?></span>
-          </div>
-          <div>
-            <span class="price"><?= htmlspecialchars($b['price'] ?: '—') ?></span>
-            <span class="badge <?= $badgeClass ?>"
-              style="margin-left:10px;padding:.45rem .6rem;border-radius:.5rem"><?= ucfirst($status) ?></span>
+        <div class="stub">
+          <div class="day"><?= htmlspecialchars($dt->format('M')) ?></div>
+          <div class="date"><?= htmlspecialchars($dt->format('d')) ?></div>
+          <div class="month" style="margin-top:6px;font-weight:600;color:#64748b">
+            <?= htmlspecialchars($dt->format('Y')) ?>
           </div>
         </div>
       </div>
-
-      <div class="stub">
-        <div class="day"><?= htmlspecialchars($dt->format('M')) ?></div>
-        <div class="date"><?= htmlspecialchars($dt->format('d')) ?></div>
-        <div class="month" style="margin-top:6px;font-weight:600;color:#64748b"><?= htmlspecialchars($dt->format('Y')) ?>
-        </div>
-      </div>
-    </div>
+    </button>
 
 
 
   <?php endforeach; ?>
 </div>
 
-
 <?php
 include("../includes/footer.php");
 ?>
+
+<!-- Booking Details Modal -->
+<div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-labelledby="bookingDetailsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow-lg border-0 rounded-4">
+
+      <!-- Modal Header -->
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="bookingDetailsModalLabel">Booking Details</h5>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="row g-4 align-items-center">
+
+          <!-- Left Side - Banquet Info -->
+          <div class="col-md-7">
+            <h4 class="fw-bold text-maroon mb-3">Royal Palace Banquet</h4>
+            <ul class="list-unstyled small text-muted">
+              <li><i class="bi bi-geo-alt-fill text-warning me-2"><?php echo $b["banquet_address"] ?></i></li>
+              <li><i class="bi bi-people-fill text-warning me-2"></i> Capacity: <?php echo $b["capacity"] ?></li>
+              <li><i class="bi bi-currency-dollar text-warning me-2"></i> Price: <?php echo $b["price"] ?></li>
+              <li><i class="bi bi-calendar-check text-warning me-2"></i> Date: <?php echo $b["date"] ?></li>
+              <li><i class="bi bi-clock-fill text-warning me-2"></i> Time Slot: <?php echo $b["booking_time"] ?></li>
+            </ul>
+          </div>
+
+          <!-- Right Side - Image -->
+          <div class="col-md-5 text-center">
+            <img src="../<?php echo $b["banquet_image"] ?>" alt="Banquet Image" class="img-fluid rounded-3 shadow-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+        <form method="POST" action="cancelBooking.php" id="cancelForm">
+          <input type="hidden" name="booking_id" value="<?php echo $b["id"]; ?>">
+          <button type="submit" class="btn btn-danger">Cancel Booking</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Extra Styling -->
+<style>
+  .text-maroon {
+    color: #800000;
+  }
+
+  .modal-content {
+    background: #fffdf8;
+    /* soft off-white for premium look */
+  }
+
+  .btn-danger {
+    background-color: #800000;
+    border: none;
+  }
+
+  .btn-danger:hover {
+    background-color: #a52a2a;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const bookingDetailsModal = document.getElementById('bookingDetailsModal');
+    const modalTitle = bookingDetailsModal.querySelector('.modal-title');
+    const modalBody = bookingDetailsModal.querySelector('.modal-body');
+    const cancelForm = document.getElementById('cancelForm');
+
+    document.querySelectorAll('.ticket').forEach(ticket => {
+      ticket.addEventListener('click', function () {
+        const bookingId = this.getAttribute('data-id');
+
+        // Debug: Log booking ID to ensure correct data-id is set
+        console.log('Clicked booking ID:', bookingId);
+
+        // Fetch booking details dynamically
+        fetch(`get_booking_details.php?booking_id=${bookingId}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(data => {
+            // Debug: Log fetched data to ensure correct response
+            console.log('Fetched booking details:', data);
+
+            // Update modal content
+            modalTitle.textContent = `Booking Details - ${data.banquet_name}`;
+            modalBody.innerHTML = `
+              <div class="row g-4 align-items-center">
+                <div class="col-md-7">
+                  <h4 class="fw-bold text-maroon mb-3">${data.banquet_name}</h4>
+                  <ul class="list-unstyled small text-muted">
+                    <li><i class="bi bi-geo-alt-fill text-warning me-2"></i> ${data.banquet_address}</li>
+                    <li><i class="bi bi-people-fill text-warning me-2"></i> Capacity: ${data.capacity}</li>
+                    <li><i class="bi bi-currency-dollar text-warning me-2"></i> Price: ${data.price}</li>
+                    <li><i class="bi bi-calendar-check text-warning me-2"></i> Date: ${data.date}</li>
+                    <li><i class="bi bi-clock-fill text-warning me-2"></i> Time Slot: ${data.booking_time}</li>
+                  </ul>
+                </div>
+                <div class="col-md-5 text-center">
+                  <img src="../${data.banquet_image}" alt="Banquet Image" class="img-fluid rounded-3 shadow-sm">
+                </div>
+              </div>`;
+
+            // Update cancel form booking ID
+            cancelForm.querySelector('input[name="booking_id"]').value = bookingId;
+          })
+          .catch(error => {
+            console.error('Error fetching booking details:', error);
+            modalBody.innerHTML = '<p class="text-danger">Failed to load booking details. Please try again later.</p>';
+          });
+      });
+    });
+  });
+</script>
+

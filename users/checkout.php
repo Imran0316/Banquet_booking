@@ -179,7 +179,7 @@ $advanceFee = round($fullPrice * 0.3, 2);
                             unset($_SESSION["success"]);
                         } elseif (isset($_SESSION["error"])) {
                             echo '<div class="alert alert-danger">' . htmlspecialchars($_SESSION["error"]) . '</div>';
-                            unset($_SESSION["error"]); // Destroy the error session after displaying it
+                            unset($_SESSION["error"]); 
                         } ?>
                         <h5 class="mb-3">Book Your Slot</h5>
 
