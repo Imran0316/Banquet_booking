@@ -434,7 +434,7 @@ $advanceFee = round($fullPrice * 0.3, 2);
         </div>
     </div>
 
-    <?php include("../includes/footer.php"); ?>
+    <?php include("include/footer.php"); ?>
     <script>
         $(document).ready(function () {
             $("#loginForm").submit(function (e) {

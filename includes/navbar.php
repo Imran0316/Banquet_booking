@@ -3,7 +3,7 @@ include 'header.php';
 ?>
 <style>
     .logo-img {
-        height: 50px;
+        height: 80px;
         /* Adjust height */
         width: auto;
         /* Maintain aspect ratio */
@@ -11,6 +11,8 @@ include 'header.php';
         /* Prevent distortion */
         filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.4));
         /* Optional glow */
+        
+        
     }
 
     .navbar-brand {
@@ -57,9 +59,9 @@ include 'header.php';
         <nav class="navbar navbar-expand-lg w-100 navbar-light transition-nav  z-2   shadow-sm">
         <?php } ?>
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="assets/images/logo_maroon.png" alt="Mera Shadi Hall Logo" class="logo-img me-2">
-                <span class="brand-text">MeraShadiHall</span>
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
+                <img src="assets/images/logo_goldenrod.png"  alt="Mera Shadi Hall Logo" class="logo-img me-2">
+                <span class="brand-text" >MeraShadiHall</span>
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">

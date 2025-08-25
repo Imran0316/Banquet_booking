@@ -35,10 +35,10 @@
       <div class="col-md-3 col-sm-6">
         <h6 class="fw-semibold mb-3 footer-title">Quick Links</h6>
         <ul class="list-unstyled">
-          <li><a href="index.php" class="text-white footer-link">Home</a></li>
-          <li><a href="banquet_list.php" class="text-white footer-link">Banquets</a></li>
-          <li><a href="login.php" class="text-white footer-link">Login</a></li>
-          <li><a href="register.php" class="text-white footer-link">Register</a></li>
+          <li><a href="../index.php" class="text-white footer-link">Home</a></li>
+          <li><a href="users/listed_banquets.php" class="text-white footer-link">Banquets</a></li>
+          <li><a href="users/login.php" class="text-white footer-link">Login</a></li>
+          <li><a href="users/register.php" class="text-white footer-link">Register</a></li>
         </ul>
       </div>
 
@@ -46,9 +46,8 @@
       <div class="col-md-3 col-sm-6">
         <h6 class="fw-semibold mb-3 footer-title">For Owners</h6>
         <ul class="list-unstyled">
-          <li><a href="owner_register.php" class="text-white footer-link">List Your Banquet</a></li>
-          <li><a href="../owner/index.php" class="text-white footer-link">Owner Login</a></li>
-          <li><a href="admin_login.php" class="text-white footer-link">Admin Panel</a></li>
+          <li><a href="owner/register.php" class="text-white footer-link">List Your Banquet</a></li>
+          <li><a href="owner/index.php" class="text-white footer-link">Owner Login</a></li>
         </ul>
       </div>
 
@@ -58,9 +57,9 @@
         <p class="mb-1"><i class="fa fa-phone me-2"></i>+92 300 1234567</p>
         <p><i class="fa fa-envelope me-2"></i>info@merashadihall.com</p>
         <div class="mt-2">
-          <a href="#" class="text-white me-3 social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="text-white me-3 social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="text-white social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.facebook.com/login/" target="_blank" class="text-white me-3 social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com" target="_blank" class="text-white me-3 social-icon"><i class="fab fa-instagram"></i></a>
+        
         </div>
       </div>
 
@@ -90,6 +89,7 @@ window.addEventListener('scroll', function() {
     }
 });
 </script>
+
 
 
 

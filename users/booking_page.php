@@ -640,7 +640,7 @@ form button[type="submit"] {
     </div>
 
     <?php
-    include("../includes/footer.php");
+    include("include/footer.php");
     ?>
 
     <script>

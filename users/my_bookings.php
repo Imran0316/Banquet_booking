@@ -381,7 +381,7 @@ function booking_code($id)
 </div>
 
 <?php
-include("../includes/footer.php");
+include("include/footer.php");
 ?>
 
 <!-- Booking Details Modal -->
