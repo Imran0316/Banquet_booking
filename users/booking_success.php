@@ -1,4 +1,10 @@
 <?php
+session_start();
+// ensure user logged in
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit;
+}
 // checkout_success.php
 require_once "../db.php"; // database connection file
 

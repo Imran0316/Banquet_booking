@@ -1,14 +1,15 @@
 <?php
 session_start();
-include("../db.php");
-include("include/header.php");
-$page = "inner";
-include("include/navbar.php");
 // ensure user logged in
 if (!isset($_SESSION['id'])) {
   header('Location: login.php');
   exit;
 }
+
+include("../db.php");
+include("include/header.php");
+$page = "inner";
+include("include/navbar.php");
 
 
 $userId = (int) $_SESSION['id'];

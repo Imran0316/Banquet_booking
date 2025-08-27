@@ -5,16 +5,44 @@ include("include/header.php");
 $page = "inner";
 include("include/navbar.php");
 
+// Search and Filters
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$date = isset($_GET['date']) ? $_GET['date'] : '';
+$price = isset($_GET['price']) ? $_GET['price'] : '';
+$capacity = isset($_GET['capacity']) ? $_GET['capacity'] : '';
+
+$query = "SELECT * FROM banquets WHERE 1=1";
+$params = [];
+
+// Search filter
 if ($search !== '') {
-    $stmt = $pdo->prepare("SELECT * FROM banquets WHERE name LIKE :search OR location LIKE :search");
-    $stmt->execute(['search' => "%$search%"]);
-} else {
-    $stmt = $pdo->query("SELECT * FROM banquets");
+    $query .= " AND (name LIKE :search OR location LIKE :search)";
+    $params[':search'] = "%$search%";
 }
 
+// Price filter
+if (!empty($price)) {
+    $query .= " AND price <= :price";
+    $params[':price'] = $price;
+}
 
+// Capacity filter
+if (!empty($capacity)) {
+    $query .= " AND capacity >= :capacity";
+    $params[':capacity'] = $capacity;
+}
 
+// Date filter (banquet not booked on this date)
+if (!empty($date)) {
+    $query .= " AND id NOT IN (
+                   SELECT banquet_id FROM bookings WHERE date = :date
+               )";
+    $params[':date'] = $date;
+}
+
+// Prepare and execute
+$stmt = $pdo->prepare($query);
+$stmt->execute($params);
 
 ?>
 <style>
@@ -107,22 +135,69 @@ if ($search !== '') {
         font-size: .8rem;
 
     }
+    input:focus-within{
+        border: none;
+        box-shadow: none !important;
+        border: 1px solid maroon !important;
+    }
+    input:hover{
+        border: 1px solid goldenrod !important;
+    }
+
+    .btn:hover{
+        color: white;
+        background-color: maroon;
+    }
 </style>
 
 
 
-<section id="banquet-list" class="py-5 bg-light sec-2">
+<section id="banquet-list" class="py-4 bg-light sec-2">
 
-    <div class="container py-4">
-        <form method="GET" class="row g-2">
-            <div class="col-md-4">
-                <input type="text" name="search" class="form-control" placeholder="Search by name or location"
-                    value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-dark w-100">Search</button>
-            </div>
-        </form>
+    <div class="container d-flex align-content-center justify-content-center flex-column py-4">
+        <div class=" text-center">
+            <form method="GET" class="row g-2">
+                <div class="col-md-4"></div>
+                <div class="input-group w-25 col-md-4">
+                    <input type="text" name="search" class="form-control rounded-start-pill" placeholder="Search by name or location"
+                        value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+                        <button type="submit" class="border-0 rounded-end-pill px-2 bg-warning"><i class="bi bi-search"></i></button>
+                </div>
+  
+                <div class="col-md-4"></div>
+
+            </form>
+        </div>
+        <!-- Filter Bar -->
+        <div class=" my-4">
+            <form class="row g-3  p-3 rounded ">
+                <div class="col-md-2"></div>
+                
+                <!-- Date Filter -->
+                <div class="col-md-2 ">
+                    <input type="date" class="form-control rounded-pill" id="filterDate" name="date">
+                </div>
+
+                <!-- Price Filter -->
+                <div class="col-md-2">
+                    <input type="number" class="form-control rounded-pill" id="filterPrice" name="price"
+                        placeholder="Enter max price">
+                </div>
+
+                <!-- Capacity Filter -->
+                <div class="col-md-2">
+                    <input type="number" class="form-control rounded-pill" id="filterCapacity" name="capacity"
+                        placeholder="Min guests">
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-2 text-end">
+                    <button type="submit" class="btn btn-warning rounded-pill  px-4">Apply Filters</button>
+                </div>
+                <div class="col-md-2"></div>
+            </form>
+        </div>
+
     </div>
 
 </section>
@@ -130,6 +205,7 @@ if ($search !== '') {
 <!-- 🔶 Banquet Cards Section -->
 <section id="banquet-list" class="py-5 bg-light sec-2">
     <div class="container">
+        <h2 class="pb-4">Banquets</h2>
         <div class="row g-4">
             <?php while ($banquet_row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 

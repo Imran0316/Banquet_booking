@@ -1,5 +1,10 @@
 <?php
 session_start();
+// ensure user logged in
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit;
+}
 $page = "inner";
 include("../db.php");
 include 'include/header.php';

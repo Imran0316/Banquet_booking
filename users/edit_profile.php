@@ -1,5 +1,10 @@
 <?php
 session_start();
+// ensure user logged in
+if (!isset($_SESSION['id'])) {
+    header('Location: login.php');
+    exit;
+}
 include("../db.php");
 $userId = $_SESSION['id'] ?? null;
 if (isset($_POST["update"]) && $_SERVER['REQUEST_METHOD'] === 'POST') {
